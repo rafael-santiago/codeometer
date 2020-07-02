@@ -84,7 +84,7 @@ func loadCodeDir(codestat *ruler.CodeStat, srcpath string, exts...string) error 
     }
     for _, file := range files {
         fullpath := filepath.Join(srcpath, file.Name())
-        err := LoadCode(codestat, fullpath, exts...)
+        err := LoadCode(codestat, fullpath, exts...) // TODO(Rafael): Speed it up. Asynchronous is the word... :P
         if err != nil {
             return err
         }
