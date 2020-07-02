@@ -1,5 +1,9 @@
 // package magnitudes gathers constant values used on all measurements stuff.
 //--
+//                          Copyright (C) 2020 by Rafael Santiago
+//
+// Use of this source code is governed by GPL-v2 license that can
+// be found in the COPYING file.
 package magnitudes
 
 const a4PaperWidthInMM = 297
