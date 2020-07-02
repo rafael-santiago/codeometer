@@ -1,0 +1,92 @@
+#                        Copyright (C) 2020 Rafael Santiago
+#
+# Use of this source is governed by GPL-v2 license that can
+# be found in the COPYIN file.
+#
+
+include ~/toolsets/go/go.hsl
+include ~/fsutil.hsl
+
+var src type list;
+var dep type string;
+
+project codeometer : toolset "go" : dependencies $dep : $src;
+
+codeometer.prologue() {
+    var option type list;
+    $option = hefesto.sys.get_option("make-certificate");
+    if ($option.count() > 0) {
+        make_certificate();
+    }
+    setup_gopath();
+    $src.ls(".*\\.go$");
+}
+
+local function str_contains(haystack type string, needle type string) : result type int {
+    var n type int;
+    var REedle type string;
+    $n = 0;
+    while ($n < $needle.len()) {
+        if ($needle.at($n) == "\\" || $needle.at($n) == ".") {
+            $REedle = $REedle + "\\";
+        }
+        $REedle = $REedle + $needle.at($n);
+        $n = $n + 1;
+    }
+    result ($haystack.match($REedle) > 0);
+}
+
+local function setup_gopath() : result type none {
+    var gopath type string;
+    $gopath = hefesto.sys.env("GOPATH");
+    var codeometer_gopath_entry type string;
+    var old_cwd type string;
+    $old_cwd = hefesto.sys.pwd();
+    hefesto.sys.cd("..");
+    $codeometer_gopath_entry = hefesto.sys.pwd();
+    hefesto.sys.cd($old_cwd);
+    if (str_contains($gopath, $codeometer_gopath_entry)) {
+        hefesto.sys.echo("INFO: Nice! GOPATH is configured :)\n");
+    } else {
+        hefesto.sys.echo("WARN: GOPATH is not configured so I will do it for you on this build task. " +
+                         "However, note that currently you are not able to run \"go build\" or \"go run\" commands " +
+                         "by yourself for this project. In order to do this, please add \"" + $codeometer_gopath_entry + "\" to your GOPATH.\n");
+        if (hefesto.sys.os_name() != "windows") {
+            $gopath = $gopath + ":";
+        } else {
+            $gopath = $gopath + ";";
+        }
+        $gopath = $gopath + $codeometer_gopath_entry;
+        hefesto.sys.setenv("GOPATH", $codeometer_gopath_entry);
+    }
+}
+
+local function make_certificate() : result type none {
+    var key type list;
+    $key = hefesto.sys.get_option("server-key");
+    if ($key.count() == 0) {
+        hefesto.sys.echo("ERROR: --server-key option is missing.\n");
+        hefesto.project.abort(1);
+    }
+    var cert type list;
+    $cert = hefesto.sys.get_option("server-crt");
+    if ($cert.count() == 0) {
+        hefesto.sys.echo("ERROR: --server-crt option is missing.\n");
+        hefesto.project.abort(1);
+    }
+    var key_path type string;
+    var cert_path type string;
+    $key_path = $key.item(0);
+    $cert_path = $cert.item(0);
+    hefesto.sys.rm($key_path);
+    hefesto.sys.rm($cert_path);
+    if (hefesto.sys.run("openssl req -new -newkey rsa:2048 -days 365 -nodes -x509 -keyout " + $key_path +
+                        " -out " + $cert_path) != 0 || isfile($key_path) == 0 || isfile($cert_path) == 0) {
+        hefesto.sys.echo("ERROR: Unable to create the certificate.\n");
+        hefesto.sys.rm($key_path);
+        hefesto.sys.rm($cert_path);
+        hefesto.project.abort(1);
+    }
+    hefesto.sys.echo("INFO: Certificate was created.\n");
+    hefesto.project.abort(0);
+}
