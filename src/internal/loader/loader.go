@@ -70,7 +70,7 @@ func loadCodeFile(codestat *ruler.CodeStat, srcpath string, exts...string) error
             return err
         }
         codestat.Lock()
-        codestat.Files[srcpath] = ruler.CodeFileInfo{st.Size()}
+        codestat.Files[getCodeKey(srcpath)] = ruler.CodeFileInfo{st.Size()}
         defer codestat.Unlock()
     }
     return nil
@@ -95,7 +95,7 @@ func loadCodeDir(codestat *ruler.CodeStat, srcpath string, exts...string) error 
 // Uncompresses a zip file to a temporary directory and scans this directory searching
 // for relevant files to get information. The temporary directory is always removed.
 func loadZippedCode(codestat *ruler.CodeStat, srcpath string, exts...string) error {
-    tempdir, errTemp := ioutil.TempDir("", "codeometer")
+    tempdir, errTemp := ioutil.TempDir("", "codeometer-temp")
     if errTemp != nil {
         return errTemp
     }
