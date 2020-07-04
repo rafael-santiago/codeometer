@@ -7,6 +7,7 @@ import (
     "internal/magnitudes"
 )
 
+// Expresses CodeStat measures in millimiters.
 type MMCodeStat ruler.CodeStat
 
 // Returns in mm the width of a entire filled line.
@@ -42,4 +43,59 @@ func (mm *MMCodeStat) DistancePerFile(filename string) float64 {
         distance = (float64(fileInfo.BytesTotal) / float64(mm.CharPerLine)) * float64(distancePerLine)
     }
     return distance
+}
+
+// Calibrates basic measurements from a known passed struct.
+func (mm *MMCodeStat) Calibrate(data interface{}) {
+    mm.Lock()
+    defer mm.Unlock()
+    switch data.(type) {
+        case *ruler.CodeStat:
+            mm.calibrateFromCodeStat(data.(*ruler.CodeStat))
+            break
+
+        case *MCodeStat:
+            mm.calibrateFromMCodeStat(data.(*MCodeStat))
+            break
+
+        case *KMCodeStat:
+            mm.calibrateFromKMCodeStat(data.(*KMCodeStat))
+            break
+    }
+}
+
+// Calibrates from a *ruler.CodeStat.
+func (mm *MMCodeStat) calibrateFromCodeStat(cs *ruler.CodeStat) {
+    cs.Lock()
+    defer cs.Unlock()
+    mm.Files = make(map[string]ruler.CodeFileInfo)
+    for k, v := range cs.Files {
+        mm.Files[k] = v
+    }
+    mm.CharPerLine = cs.CharPerLine
+    mm.CharPerPage = cs.CharPerPage
+}
+
+// Calibrates from a *MCodeStat.
+func (mm *MMCodeStat) calibrateFromMCodeStat(m *MCodeStat) {
+    m.Lock()
+    defer m.Unlock()
+    mm.Files = make(map[string]ruler.CodeFileInfo)
+    for k, v := range m.Files {
+        mm.Files[k] = v
+    }
+    mm.CharPerLine = m.CharPerLine
+    mm.CharPerPage = m.CharPerPage
+}
+
+// Calibrates from a *KMCodeStat.
+func (mm *MMCodeStat) calibrateFromKMCodeStat(km *KMCodeStat) {
+    km.Lock()
+    defer km.Unlock()
+    mm.Files = make(map[string]ruler.CodeFileInfo)
+    for k, v := range km.Files {
+        mm.Files[k] = v
+    }
+    mm.CharPerLine = km.CharPerLine
+    mm.CharPerPage = km.CharPerPage
 }
