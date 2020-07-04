@@ -31,6 +31,10 @@ func (mi *MICodeStat) Calibrate(data interface{}) {
         case *MMCodeStat:
             mi.calibrateFromMMCodeStat(data.(*MMCodeStat))
             break
+
+        case *KMCodeStat:
+            mi.calibrateFromKMCodeStat(data.(*KMCodeStat))
+            break
     }
 }
 
@@ -68,6 +72,18 @@ func (mi *MICodeStat) calibrateFromMMCodeStat(mm *MMCodeStat) {
     }
     mi.CharPerLine = mm.CharPerLine
     mi.CharPerPage = mm.CharPerPage
+}
+
+// Calibrates from a *KMCodeStat.
+func (mi *MICodeStat) calibrateFromKMCodeStat(km *KMCodeStat) {
+    km.Lock()
+    defer km.Unlock()
+    mi.Files = make(map[string]ruler.CodeFileInfo)
+    for k, v := range km.Files {
+        mi.Files[k] = v
+    }
+    mi.CharPerLine = km.CharPerLine
+    mi.CharPerPage = km.CharPerPage
 }
 
 // Returns in mi the width of a entire filled line.
