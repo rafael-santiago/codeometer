@@ -25,6 +25,10 @@ func (km *KMCodeStat) Calibrate(data interface{}) {
         case *MMCodeStat:
             km.calibrateFromMMCodeStat(data.(*MMCodeStat))
             break
+
+        case *MICodeStat:
+            km.calibrateFromMICodeStat(data.(*MICodeStat))
+            break
     }
 }
 
@@ -64,7 +68,20 @@ func (km *KMCodeStat) calibrateFromMMCodeStat(mm *MMCodeStat) {
     km.CharPerPage = mm.CharPerPage
 }
 
-// Returns in m the width of a entire filled line.
+// Calibrates from a *MICodeStat.
+func (km *KMCodeStat) calibrateFromMICodeStat(mi *MICodeStat) {
+    mi.Lock()
+    defer mi.Unlock()
+    km.Files = make(map[string]ruler.CodeFileInfo)
+    for k, v := range mi.Files {
+        km.Files[k] = v
+    }
+    km.CharPerLine = mi.CharPerLine
+    km.CharPerPage = mi.CharPerPage
+}
+
+
+// Returns in km the width of a entire filled line.
 func (km *KMCodeStat) DistancePerLine() float64 {
     km.Lock()
     defer km.Unlock()
@@ -73,7 +90,7 @@ func (km *KMCodeStat) DistancePerLine() float64 {
     return m.DistancePerLine() / 1000
 }
 
-// Returns in m the distance of a entire filled page.
+// Returns in km the distance of a entire filled page.
 func (km *KMCodeStat) DistancePerPage() float64 {
     km.Lock()
     defer km.Unlock()
@@ -82,7 +99,7 @@ func (km *KMCodeStat) DistancePerPage() float64 {
     return m.DistancePerPage() / 1000
 }
 
-// Returns the total distance (in m) of all loaded codes.
+// Returns the total distance (in km) of all loaded codes.
 func (km *KMCodeStat) TotalDistance() float64 {
     km.Lock()
     defer km.Unlock()
@@ -91,7 +108,7 @@ func (km *KMCodeStat) TotalDistance() float64 {
     return m.TotalDistance() / 1000
 }
 
-// Returns the total distance (in m) of a specific previous loaded file.
+// Returns the total distance (in km) of a specific previous loaded file.
 func (km *KMCodeStat) DistancePerFile(filename string) float64 {
     km.Lock()
     defer km.Unlock()

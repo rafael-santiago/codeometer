@@ -61,6 +61,10 @@ func (mm *MMCodeStat) Calibrate(data interface{}) {
         case *KMCodeStat:
             mm.calibrateFromKMCodeStat(data.(*KMCodeStat))
             break
+
+        case *MICodeStat:
+            mm.calibrateFromMICodeStat(data.(*MICodeStat))
+            break
     }
 }
 
@@ -98,4 +102,16 @@ func (mm *MMCodeStat) calibrateFromKMCodeStat(km *KMCodeStat) {
     }
     mm.CharPerLine = km.CharPerLine
     mm.CharPerPage = km.CharPerPage
+}
+
+// Calibrates from a *MICodeStat.
+func (mm *MMCodeStat) calibrateFromMICodeStat(mi *MICodeStat) {
+    mi.Lock()
+    defer mi.Unlock()
+    mm.Files = make(map[string]ruler.CodeFileInfo)
+    for k, v := range mi.Files {
+        mm.Files[k] = v
+    }
+    mm.CharPerLine = mi.CharPerLine
+    mm.CharPerPage = mi.CharPerPage
 }
