@@ -20,6 +20,6 @@ func (p *PaulistaAvenueEstimator) K() float64 {
 func (p *PaulistaAvenueEstimator) Estimate(codestat ruler.CodeStat) string {
     km := &measurer.KMCodeStat{}
     km.Calibrate(codestat)
-    return doEstimative(km, "Your code has %.2f%% of the Paulista avenue extension (%d km).",
+    return doEstimative(km, "Your code has %.2f%% of the Paulista avenue extension (%.2f km).",
                             "Paulista avenue has %.2f%% of your code extension (%.2f km)", p)
 }
