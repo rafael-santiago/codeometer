@@ -19,7 +19,7 @@ func Estimate(estimator Estimator, codestat ruler.CodeStat) string {
     return estimator.Estimate(codestat)
 }
 
-// Internal function that processes a estimative returning a string containing it.
+// Internal function that processes an estimative returning a string containing it.
 func doEstimative(measurerHandle interface{}, codeIsLessMessage, codeIsGreaterMessage string,
                   estimator Estimator) string {
     var totalDistance float64
