@@ -1,5 +1,9 @@
 // package estimator prints estimatives about your code metrics based on famous places, momuments.
 // --
+//                          Copyright (C) 2020 by Rafael Santiago
+//
+// Use of this source code is governed by GPL-v2 license that can
+// be found in the COPYING file.
 package estimator
 
 import (
