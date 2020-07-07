@@ -55,7 +55,10 @@ func LoadCode(codestat *ruler.CodeStat, srcpath string, exts...string) error {
 // Checks if filename ends with some relevant file extension.
 func isRelevantFile(filename string, exts...string) bool {
     for _, ext := range exts {
-        if strings.HasSuffix(strings.ToLower(filename), ext) {
+        if len(ext) > 0 && !strings.HasPrefix(ext, ".") {
+            ext = "." + ext
+        }
+        if strings.HasSuffix(strings.ToLower(filename), strings.ToLower(ext)) {
             return true
         }
     }
@@ -70,6 +73,9 @@ func loadCodeFile(codestat *ruler.CodeStat, srcpath string, exts...string) error
             return err
         }
         codestat.Lock()
+        if codestat.Files == nil {
+            codestat.Files = make(map[string]ruler.CodeFileInfo)
+        }
         codestat.Files[getCodeKey(srcpath)] = ruler.CodeFileInfo{st.Size()}
         defer codestat.Unlock()
     }
@@ -138,7 +144,7 @@ func loadZippedCode(codestat *ruler.CodeStat, srcpath string, exts...string) err
 // directory searching for relevant code files. The temporary directory is always
 // removed.
 func loadGitRepoCode(codestat *ruler.CodeStat, srcpath string, exts...string) error {
-    tempdir, errTemp := ioutil.TempDir("", "codeometer")
+    tempdir, errTemp := ioutil.TempDir("", "codeometer-temp")
     if errTemp != nil {
         return errTemp
     }
