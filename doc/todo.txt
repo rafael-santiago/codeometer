@@ -1,5 +1,5 @@
-(A) Implement measurer tests. +Tests
 (A) Implement estimator tests. +Tests
+x (A) Implement measurer tests. +Tests
 x (A) Implement ruler tests. +Tests
 x (A) Implement magnitudes tests. +Tests
 x (A) Implement loader tests. +Tests

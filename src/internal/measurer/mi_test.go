@@ -11,50 +11,50 @@ import (
     "fmt"
 )
 
-func TestMCalibrate(t *testing.T) {
+func TestMICalibrate(t *testing.T) {
     types := []interface{}{
         &ruler.CodeStat{},
         &MMCodeStat{},
+        &MCodeStat{},
         &KMCodeStat{},
-        &MICodeStat{},
     }
-    m := &MCodeStat{}
+    mi := &MICodeStat{}
     for _, t := range types {
-        m.Calibrate(t)
+        mi.Calibrate(t)
     }
 }
 
-func TestMDistancePerLine(t *testing.T) {
+func TestMIDistancePerLine(t *testing.T) {
     codestat := &ruler.CodeStat{}
-    m := &MCodeStat{}
-    m.Calibrate(codestat)
-    k := float64(magnitudes.GetA4PaperWidthSizeInMM()) / 1000
-    distance := m.DistancePerLine()
+    mi := &MICodeStat{}
+    mi.Calibrate(codestat)
+    k := ((float64(magnitudes.GetA4PaperWidthSizeInMM()) / 1000) / 1000) * 0.621371
+    distance := mi.DistancePerLine()
     if distance != k {
         t.Errorf(`distance != k: %v != %v`, distance, k)
     }
 }
 
-func TestMDistancePerPage(t *testing.T) {
+func TestMIDistancePerPage(t *testing.T) {
     codestat := &ruler.CodeStat{}
     codestat.CalibrateCourier12px()
-    k := (float64(magnitudes.GetA4PaperWidthSizeInMM()) * float64(codestat.CharPerPage)) / 1000
-    m := &MCodeStat{}
-    m.Calibrate(codestat)
-    if k != m.DistancePerPage() {
-        t.Errorf(`k != m.DistancePerPage(): %v != %v`, k, m.DistancePerPage())
+    k := (((float64(magnitudes.GetA4PaperWidthSizeInMM()) * float64(codestat.CharPerPage)) / 1000) / 1000) * 0.621371
+    mi := &MICodeStat{}
+    mi.Calibrate(codestat)
+    if k != mi.DistancePerPage() {
+        t.Errorf(`k != mi.DistancePerPage(): %v != %v`, k, mi.DistancePerPage())
     }
 }
 
-func TestMDistancePerFile(t *testing.T) {
+func TestMIDistancePerFile(t *testing.T) {
     files := []struct {
         Filepath string
         BytesTotal int64
         ExpectedSize string
     }{
-        { "main.c", 101, "0.37"},
-        { "sys.c", 727318, "2634.31"},
-        { "exit.c", 92388, "334.62"},
+        { "main.c", 101, "0.00"},
+        { "sys.c", 727318, "1.64"},
+        { "exit.c", 92388, "0.21"},
     }
     codestat := &ruler.CodeStat{}
     codestat.CalibrateCourier12px()
@@ -62,17 +62,17 @@ func TestMDistancePerFile(t *testing.T) {
     for _, file := range files {
         codestat.Files[file.Filepath] = ruler.CodeFileInfo{file.BytesTotal}
     }
-    m := &MCodeStat{}
-    m.Calibrate(codestat)
+    mi := &MICodeStat{}
+    mi.Calibrate(codestat)
     for _, file := range files {
-        distance := fmt.Sprintf("%.2f", m.DistancePerFile(file.Filepath))
+        distance := fmt.Sprintf("%.2f", mi.DistancePerFile(file.Filepath))
         if distance != file.ExpectedSize {
             t.Errorf(`distance != file.ExpectedSize: %v != %v`, distance, file.ExpectedSize)
         }
     }
 }
 
-func TestMTotalDistance(t *testing.T) {
+func TestMITotalDistance(t *testing.T) {
     files := []struct {
         Filepath string
         BytesTotal int64
@@ -81,16 +81,16 @@ func TestMTotalDistance(t *testing.T) {
         { "sys.c", 727318},
         { "exit.c", 92388},
     }
-    expectedTotalDistance := "2969.30"
+    expectedTotalDistance := "1.85"
     codestat := &ruler.CodeStat{}
     codestat.CalibrateCourier12px()
     codestat.Files = make(map[string]ruler.CodeFileInfo)
     for _, file := range files {
         codestat.Files[file.Filepath] = ruler.CodeFileInfo{file.BytesTotal}
     }
-    m := &MCodeStat{}
-    m.Calibrate(codestat)
-    distance := fmt.Sprintf("%.2f", m.TotalDistance())
+    mi := &MICodeStat{}
+    mi.Calibrate(codestat)
+    distance := fmt.Sprintf("%.2f", mi.TotalDistance())
     if distance != expectedTotalDistance {
         t.Errorf(`distance != expectedTotalDistance: %v != %v`, distance, expectedTotalDistance)
     }

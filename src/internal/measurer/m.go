@@ -33,6 +33,10 @@ func (m *MCodeStat) Calibrate(data interface{}) {
         case *MICodeStat:
             m.calibrateFromMICodeStat(data.(*MICodeStat))
             break
+
+        default:
+            panic("MCodeStat.Calibrate(): Unsupported type was passed.")
+            break
     }
 }
 
