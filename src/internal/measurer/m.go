@@ -86,36 +86,36 @@ func (m *MCodeStat) calibrateFromMICodeStat(mi *MICodeStat) {
 
 // Returns in m the width of a entire filled line.
 func (m *MCodeStat) DistancePerLine() float64 {
-    m.Lock()
-    defer m.Unlock()
     mm := &MMCodeStat{}
     mm.Calibrate(m)
+    m.Lock()
+    defer m.Unlock()
     return mm.DistancePerLine() / 1000
 }
 
 // Returns in m the distance of a entire filled page.
 func (m *MCodeStat) DistancePerPage() float64 {
-    m.Lock()
-    defer m.Unlock()
     mm := &MMCodeStat{}
     mm.Calibrate(m)
+    m.Lock()
+    defer m.Unlock()
     return mm.DistancePerPage() / 1000
 }
 
 // Returns the total distance (in m) of all loaded codes.
 func (m *MCodeStat) TotalDistance() float64 {
-    m.Lock()
-    defer m.Unlock()
     mm := &MMCodeStat{}
     mm.Calibrate(m)
+    m.Lock()
+    defer m.Unlock()
     return mm.TotalDistance() / 1000
 }
 
 // Returns the total distance (in m) of a specific previous loaded file.
 func (m *MCodeStat) DistancePerFile(filename string) float64 {
-    m.Lock()
-    defer m.Unlock()
     mm := &MMCodeStat{}
     mm.Calibrate(m)
+    m.Lock()
+    defer m.Unlock()
     return mm.DistancePerFile(filename) / 1000
 }
