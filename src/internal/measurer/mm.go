@@ -23,8 +23,6 @@ func (mm *MMCodeStat) DistancePerLine() float64 {
 
 // Returns in mm the distance of a entire filled page.
 func (mm *MMCodeStat) DistancePerPage() float64 {
-    mm.Lock()
-    defer mm.Unlock()
     return mm.DistancePerLine() * float64(mm.CharPerPage)
 }
 
@@ -68,6 +66,10 @@ func (mm *MMCodeStat) Calibrate(data interface{}) {
 
         case *MICodeStat:
             mm.calibrateFromMICodeStat(data.(*MICodeStat))
+            break
+
+        default:
+            panic("MMCodeStat.Calibrate(): Unsupported type was passed.")
             break
     }
 }
