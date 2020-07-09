@@ -13,7 +13,7 @@ import (
 // The 'help' command handler.
 func help() int {
     var topic string
-    if len(os.Args) > 1 {
+    if len(os.Args) > 2 {
         topic = os.Args[2]
     } else {
         topic = "help"
