@@ -6,6 +6,7 @@
 // be found in the COPYING file.
 package codeometersys
 
+// Returns manual.txt file path on Windows.
 func ManualPath() string {
     return "C:\\codeometer\\doc\\manual.txt"
 }

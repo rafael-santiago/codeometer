@@ -6,8 +6,10 @@
 // be found in the COPYING file.
 package codeometersys
 
+// Application's version.
 const AppVersion = `1`
 
+// Default help banner.
 const HelpBanner = `
                                                       ,  #
                                                       ########Y

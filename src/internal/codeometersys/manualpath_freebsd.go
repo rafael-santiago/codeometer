@@ -6,6 +6,7 @@
 // be found in the COPYING file.
 package codeometersys
 
+// Returns manual.txt file path on FreeBSD.
 func ManualPath() string {
     return "/usr/local/share/codeometer/doc/manual.txt"
 }
