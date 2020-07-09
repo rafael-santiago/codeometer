@@ -7,29 +7,65 @@
 package main
 
 import (
-    "internal/ruler"
-    "internal/measurer"
+    "internal/codeometersys"
+    "internal/options"
     "fmt"
+    "os"
+    "io/ioutil"
 )
 
+type CodeometerHandlerFunc map[string]func()int
+
+var gCodeometerCommands CodeometerHandlerFunc = CodeometerHandlerFunc {
+    "measure" : measure,
+    "httpd" : httpd,
+    "man" : man,
+    "" : showHelpBanner,
+    "help" : showHelpBanner,
+    "version" : showAppVersion,
+}
+
 func main() {
-    c := &ruler.CodeStat{}
-    c.CharPerPage = 10
-    c.CharPerLine = 1
-    c.Files = make(map[string]ruler.CodeFileInfo)
-    c.Files["CodeStat"] = ruler.CodeFileInfo{101}
-    mm := &measurer.MMCodeStat{}
-    mm.CharPerPage = 20
-    mm.CharPerLine = 2
-    mm.Files = make(map[string]ruler.CodeFileInfo)
-    mm.Files["MMCodeStat"] = ruler.CodeFileInfo{202}
-    m := &measurer.MCodeStat{}
-    fmt.Println("c = ", c)
-    m.Calibrate(c)
-    fmt.Println("m = ", m)
-    m.Calibrate(mm)
-    fmt.Println("mm = ", mm)
-    m.Files["Meter"] = ruler.CodeFileInfo{303}
-    fmt.Println("m = ", m)
-    fmt.Println("mm = ", mm)
+    command, found := gCodeometerCommands[options.GetCommand()]
+    if !found {
+        command = unknownCommand
+    }
+    os.Exit(command())
+}
+
+func measure() int {
+    fmt.Fprintf(os.Stderr, "Not implemented.\n")
+    return 1
+}
+
+func httpd() int {
+    fmt.Fprintf(os.Stderr, "Not implemented.\n")
+    return 1
+}
+
+func man() int {
+    var exitCode int
+    data, err := ioutil.ReadFile(codeometersys.ManualPath())
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "error: %v.\n", err)
+        exitCode = 1
+    } else {
+        fmt.Fprintf(os.Stdout, "%s\n", string(data))
+    }
+    return exitCode
+}
+
+func showHelpBanner() int {
+    fmt.Fprintf(os.Stdout, "%s", codeometersys.HelpBanner)
+    return 0
+}
+
+func showAppVersion() int {
+    fmt.Fprintf(os.Stdout, "codeometer-v%s\n", codeometersys.AppVersion)
+    return 0
+}
+
+func unknownCommand() int {
+    fmt.Fprintf(os.Stderr, "error: Unknown command: '%s'.\n", options.GetCommand())
+    return 1
 }

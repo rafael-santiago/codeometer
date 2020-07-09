@@ -1,4 +1,6 @@
-(A) Implement command line portion of the main package. +Evol
+(A) Implement measure command. +Evol
+(A) Implement httpd command. +Evol
+x (A) Implement command line portion of the main package. +Evol
 x (A) Make options package works based on '<command> options...'. +Evol
 x (A) Implement options package's tests. +Tests
 x (A) Implement options package. +Evol

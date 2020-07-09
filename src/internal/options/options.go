@@ -12,16 +12,16 @@ import (
 )
 
 func GetCommand() string {
-    if len(os.Args) > 0 {
-        return os.Args[0]
+    if len(os.Args) > 1 {
+        return os.Args[1]
     }
     return ""
 }
 
 func GetOption(option, defaultValue string) string {
-    if len(os.Args) > 1 {
+    if len(os.Args) > 2 {
         wanted := "--" + option + "="
-        for _, a := range os.Args[1:] {
+        for _, a := range os.Args[2:] {
             if strings.HasPrefix(a, wanted) {
                 return a[len(wanted):]
             }
@@ -31,9 +31,9 @@ func GetOption(option, defaultValue string) string {
 }
 
 func GetBoolOption(option string, defaultValue bool) bool {
-    if len(os.Args) > 1 {
+    if len(os.Args) > 2 {
         wanted := "--" + option
-        for _, a := range os.Args {
+        for _, a := range os.Args[2:] {
             if wanted == a {
                 return true
             }
