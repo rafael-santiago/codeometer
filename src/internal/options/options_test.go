@@ -10,6 +10,30 @@ import (
     "reflect"
 )
 
+func TestGetCommand(t *testing.T) {
+    oldArgs := os.Args
+    defer func() {
+            os.Args = oldArgs
+    }()
+    testVector := []struct {
+        Expected string
+        Args []string
+    }{
+        { "", []string{} },
+        { "one", []string{"one", "--foo=bar", "--bar=foo"} },
+        { "two", []string{"two", "--abc=def", "--ghijklmn=opqrstuvwxyz." } },
+        { "three", []string{"three", "--abc=def", "--2nd=option" } },
+        { "go", []string{"go", "--abc=def", "--2nd=option" } },
+    }
+    for _, test := range testVector {
+        os.Args = test.Args
+        command := GetCommand()
+        if command != test.Expected {
+            t.Errorf(`command != test.Expected: %v != %v`, command, test.Expected)
+        }
+    }
+}
+
 func TestGetOption(t *testing.T) {
     oldArgs := os.Args
     defer func() {
@@ -21,9 +45,9 @@ func TestGetOption(t *testing.T) {
         Expected string
         Args []string
     }{
-        { "foo", "", "bar", []string{"--foo=bar", "--bar=foo"} },
-        { "boo", "ah!", "ah!", []string{"--abc=def", "--ghijklmn=opqrstuvwxyz." } },
-        { "2nd", "way", "option", []string{"--abc=def", "--2nd=option" } },
+        { "foo", "", "bar", []string{"command", "--foo=bar", "--bar=foo"} },
+        { "boo", "ah!", "ah!", []string{"test", "--abc=def", "--ghijklmn=opqrstuvwxyz." } },
+        { "2nd", "way", "option", []string{"go", "--abc=def", "--2nd=option" } },
     }
     for _, test := range testVector {
         os.Args = test.Args
@@ -45,9 +69,9 @@ func TestGetBoolOption(t *testing.T) {
         Expected bool
         Args []string
     }{
-        { "foo", false, true, []string{"--bar", "--foo"} },
-        { "boo", true, true, []string{"--abc", "--ghijklmnopqrstuvwxyz" } },
-        { "2nd", false, true, []string{"--abc", "--2nd"}},
+        { "foo", false, true, []string{"go", "--bar", "--foo"} },
+        { "boo", true, true, []string{"gogo", "--abc", "--ghijklmnopqrstuvwxyz" } },
+        { "2nd", false, true, []string{"gogogo", "--abc", "--2nd"}},
     }
     for _, test := range testVector {
         os.Args = test.Args
@@ -69,9 +93,9 @@ func TestGetArrayOption(t *testing.T) {
         Expected []string
         Args []string
     }{
-        { "foo", []string{"foo", "boo", "bar", "baz"}, []string{"boo", "foo", "baz", "bar"}, []string{"--foo=boo,foo,baz,bar", "--bar=foo,boo,boo"} },
-        { "boo", []string{"ah!", "hahaha"}, []string{"rabbit!", "aie!", "ruuuunnn-awwaaaay!!!"}, []string{"--abc=def", `--boo=rabbit!,aie!,ruuuunnn-awwaaaay!!!`} },
-        { "2nd", []string{ "w", "a", "y"}, []string{"o", "p", "t", "i", "o", "n"}, []string{"--abc=def", "--2nd=o,p,t,i,o,n" } },
+        { "foo", []string{"foo", "boo", "bar", "baz"}, []string{"boo", "foo", "baz", "bar"}, []string{"c1", "--foo=boo,foo,baz,bar", "--bar=foo,boo,boo"} },
+        { "boo", []string{"ah!", "hahaha"}, []string{"rabbit!", "aie!", "ruuuunnn-awwaaaay!!!"}, []string{"c2", "--abc=def", `--boo=rabbit!,aie!,ruuuunnn-awwaaaay!!!`} },
+        { "2nd", []string{ "w", "a", "y"}, []string{"o", "p", "t", "i", "o", "n"}, []string{"c3", "--abc=def", "--2nd=o,p,t,i,o,n" } },
     }
     for _, test := range testVector {
         os.Args = test.Args

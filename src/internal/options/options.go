@@ -11,21 +11,32 @@ import (
     "os"
 )
 
+func GetCommand() string {
+    if len(os.Args) > 0 {
+        return os.Args[0]
+    }
+    return ""
+}
+
 func GetOption(option, defaultValue string) string {
-    wanted := "--" + option + "="
-    for _, a := range os.Args {
-        if strings.HasPrefix(a, wanted) {
-            return a[len(wanted):]
+    if len(os.Args) > 1 {
+        wanted := "--" + option + "="
+        for _, a := range os.Args[1:] {
+            if strings.HasPrefix(a, wanted) {
+                return a[len(wanted):]
+            }
         }
     }
     return defaultValue
 }
 
 func GetBoolOption(option string, defaultValue bool) bool {
-    wanted := "--" + option
-    for _, a := range os.Args {
-        if wanted == a {
-            return true
+    if len(os.Args) > 1 {
+        wanted := "--" + option
+        for _, a := range os.Args {
+            if wanted == a {
+                return true
+            }
         }
     }
     return defaultValue
