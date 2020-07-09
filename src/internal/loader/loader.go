@@ -17,6 +17,7 @@ import (
     "bytes"
     "io"
     "os/exec"
+//    "sync"
 )
 
 // This function expects as srcpath a file, directory or git-repo uri. At the end
@@ -88,19 +89,26 @@ func loadCodeDir(codestat *ruler.CodeStat, srcpath string, exts...string) error 
     if err != nil {
         return err
     }
-    errors := make(chan error, len(files))
+    //errors := make(chan error, len(files))
     for _, file := range files {
         fullpath := filepath.Join(srcpath, file.Name())
-        go func() {
-            err := LoadCode(codestat, fullpath, exts...)
-            errors <- err
-        }()
-    }
-    for range files {
-        if err := <-errors; err != nil {
+        //go func() {
+        //    err := LoadCode(codestat, fullpath, exts...)
+        //    errors <- err
+        //}()
+        err := LoadCode(codestat, fullpath, exts...)
+        if err != nil {
             return err
         }
     }
+    //for range files {
+    //    err = <-errors
+    //    if err != nil {
+    //        close(errors)
+    //        return err
+    //    }
+    //}
+
     return nil
 }
 
