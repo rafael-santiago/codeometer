@@ -1,3 +1,5 @@
+x (A) Implement options package's tests. +Tests
+x (A) Implement options package. +Evol
 x (A) Implement estimator tests. +Tests
 x (A) Implement measurer tests. +Tests
 x (A) Implement ruler tests. +Tests
