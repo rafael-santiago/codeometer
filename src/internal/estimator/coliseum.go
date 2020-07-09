@@ -21,9 +21,9 @@ func (c *ColiseumEstimator) K() float64 {
 }
 
 // Returns a string with some estimative of your code against Coliseum size.
-func (c *ColiseumEstimator) Estimate(codestat ruler.CodeStat) string {
+func (c *ColiseumEstimator) Estimate(codestat *ruler.CodeStat) string {
     m := &measurer.MCodeStat{}
     m.Calibrate(codestat)
-    return doEstimative(m, "Your code has %.2f%% of the Coliseum's height (%.2f m).",
-                           "Coliseum's height has %.2f%% of your code extension (%.2f m)", c)
+    return doEstimative(m, "Your code has %.2f%% of the Coliseum's height (%.fm).",
+                           "Coliseum's height (%.fm) has %.2f%% of your code extension (%.2fm).", c)
 }

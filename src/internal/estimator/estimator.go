@@ -14,12 +14,12 @@ import (
 
 // Defines basic functions that any estimator must have
 type Estimator interface {
-    Estimate(codestat ruler.CodeStat) string
+    Estimate(codestat *ruler.CodeStat) string
     K() float64
 }
 
 // Does a specific estimative.
-func Estimate(estimator Estimator, codestat ruler.CodeStat) string {
+func Estimate(estimator Estimator, codestat *ruler.CodeStat) string {
     return estimator.Estimate(codestat)
 }
 
@@ -45,15 +45,19 @@ func doEstimative(measurerHandle interface{}, codeIsLessMessage, codeIsGreaterMe
             totalDistance = measurerHandle.(*measurer.MICodeStat).TotalDistance()
             break
 
+        default:
+            panic("doEstimative(): Unexpected measurerHandle type.")
+            break
+
     }
     var retval string
     k := estimator.K()
     if totalDistance < k {
-        perc := (k / 100) * totalDistance
+        perc := (totalDistance / k) * 100
         retval = fmt.Sprintf(codeIsLessMessage, perc, k)
     } else {
-        perc := (totalDistance / 100) * k
-        retval = fmt.Sprintf(codeIsGreaterMessage, perc, totalDistance)
+        perc := (k / totalDistance) * 100
+        retval = fmt.Sprintf(codeIsGreaterMessage, k, perc, totalDistance)
     }
     return retval
 }

@@ -21,9 +21,9 @@ func (w *WallStreetEstimator) K() float64 {
 }
 
 // Returns a string with some estimative of your code against Wall street size.
-func (w *WallStreetEstimator) Estimate(codestat ruler.CodeStat) string {
+func (w *WallStreetEstimator) Estimate(codestat *ruler.CodeStat) string {
     m := &measurer.MCodeStat{}
     m.Calibrate(codestat)
-    return doEstimative(m, "Your code has %.2f%% of the Wall street extension (%.2f m).",
-                           "Wall street has %.2f%% of your code extension (%.2f m)", w)
+    return doEstimative(m, "Your code has %.2f%% of the Wall street extension (%.fm).",
+                           "Wall street's extension (%.fm) has %.2f%% of your code extension (%.2fm).", w)
 }

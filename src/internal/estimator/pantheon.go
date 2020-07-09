@@ -21,9 +21,9 @@ func (p *PantheonEstimator) K() float64 {
 }
 
 // Returns a string with some estimative of your code against Pantheon size.
-func (p *PantheonEstimator) Estimate(codestat ruler.CodeStat) string {
+func (p *PantheonEstimator) Estimate(codestat *ruler.CodeStat) string {
     m := &measurer.MCodeStat{}
     m.Calibrate(codestat)
-    return doEstimative(m, "Your code has %.2f%% of the Pantheon's height (%.2f m).",
-                           "Pantheon's height has %.2f%% of your code extension (%.2f m)", p)
+    return doEstimative(m, "Your code has %.2f%% of the Pantheon's height (%.fm).",
+                           "Pantheon's height (%.fm) has %.2f%% of your code extension (%.2fm).", p)
 }

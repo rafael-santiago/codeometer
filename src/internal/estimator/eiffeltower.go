@@ -21,9 +21,9 @@ func (e *EiffelTowerEstimator) K() float64 {
 }
 
 // Returns a string with some estimative of your code against Eifferl tower size.
-func (e *EiffelTowerEstimator) Estimate(codestat ruler.CodeStat) string {
+func (e *EiffelTowerEstimator) Estimate(codestat *ruler.CodeStat) string {
     m := &measurer.MCodeStat{}
     m.Calibrate(codestat)
-    return doEstimative(m, "Your code has %.2f%% of the Eiffel tower's height (%.2f m).",
-                           "Eiffel tower's height has %.2f%% of your code extension (%.2f m)", e)
+    return doEstimative(m, "Your code has %.2f%% of the Eiffel tower's height (%.fm).",
+                           "Eiffel tower's height (%.fm) has %.2f%% of your code extension (%.2fm).", e)
 }

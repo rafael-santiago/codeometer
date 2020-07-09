@@ -21,9 +21,9 @@ func (w *WashingtonMonumentEstimator) K() float64 {
 }
 
 // Returns a string with some estimative of your code against Washington Monument size.
-func (w *WashingtonMonumentEstimator) Estimate(codestat ruler.CodeStat) string {
+func (w *WashingtonMonumentEstimator) Estimate(codestat *ruler.CodeStat) string {
     m := &measurer.MCodeStat{}
     m.Calibrate(codestat)
-    return doEstimative(m, "Your code has %.2f%% of the Washington Monument's height (%.2f m).",
-                           "Washington Monument's height has %.2f%% of your code extension (%.2f m)", w)
+    return doEstimative(m, "Your code has %.2f%% of the Washington Monument's height (%.fm).",
+                           "Washington Monument's height (%.fm) has %.2f%% of your code extension (%.2fm).", w)
 }

@@ -21,9 +21,9 @@ func (c *ChristTheRedeemerEstimator) K() float64 {
 }
 
 // Returns a string with some estimative of your code against Christ the Redmeer size.
-func (c *ChristTheRedeemerEstimator) Estimate(codestat ruler.CodeStat) string {
+func (c *ChristTheRedeemerEstimator) Estimate(codestat *ruler.CodeStat) string {
     m := &measurer.MCodeStat{}
     m.Calibrate(codestat)
-    return doEstimative(m, "Your code has %.2f%% of the Christ the Redeemer's height (%.2f m).",
-                           "Christ the Redeemer's height has %.2f%% of your code extension (%.2f m)", c)
+    return doEstimative(m, "Your code has %.2f%% of the Christ the Redeemer's height (%.fm).",
+                           "Christ the Redeemer's height (%.fm) has %.2f%% of your code extension (%.2fm).", c)
 }

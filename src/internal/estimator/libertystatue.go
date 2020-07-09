@@ -21,9 +21,9 @@ func (l *LibertyStatueEstimator) K() float64 {
 }
 
 // Returns a string with some estimative of your code against Liberty Statue size.
-func (l *LibertyStatueEstimator) Estimate(codestat ruler.CodeStat) string {
+func (l *LibertyStatueEstimator) Estimate(codestat *ruler.CodeStat) string {
     m := &measurer.MCodeStat{}
     m.Calibrate(codestat)
-    return doEstimative(m, "Your code has %.2f%% of the Liberty Statue's height (%.2f m).",
-                           "Liberty Statue's height has %.2f%% of your code extension (%.2f m)", l)
+    return doEstimative(m, "Your code has %.2f%% of the Liberty Statue's height (%.fm).",
+                           "Liberty Statue's height (%.fm) has %.2f%% of your code extension (%.2fm).", l)
 }

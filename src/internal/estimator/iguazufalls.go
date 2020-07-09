@@ -21,9 +21,9 @@ func (i *IguazuFallsEstimator) K() float64 {
 }
 
 // Returns a string with some estimative of your code against Iguazu Falls size.
-func (i *IguazuFallsEstimator) Estimate(codestat ruler.CodeStat) string {
+func (i *IguazuFallsEstimator) Estimate(codestat *ruler.CodeStat) string {
     m := &measurer.MCodeStat{}
     m.Calibrate(codestat)
-    return doEstimative(m, "Your code has %.2f%% of the Iguazu Falls' height (%.2f m).",
-                           "Iguazu Falls' height has %.2f%% of your code extension (%.2f m)", i)
+    return doEstimative(m, "Your code has %.2f%% of the Iguazu Falls' height (%.fm).",
+                           "Iguazu Falls' height (%.fm) has %.2f%% of your code extension (%.2fm).", i)
 }
