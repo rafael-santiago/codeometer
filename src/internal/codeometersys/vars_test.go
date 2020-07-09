@@ -15,13 +15,13 @@ func Test_appVersion(t *testing.T) {
 }
 
 func Test_commands(t *testing.T) {
-    expectedHandlers := map[string]CodeometerHandlerFunc {
-        "measure" : measure,
-        "httpd" : httpd,
-        "man" : man,
-        "help" : showHelpBanner,
-        "version" : showAppVersion,
-        "" : showHelpBanner,
+    expectedHandlers :=  map[string]CodeometerCommandHandler {
+        "measure" : CodeometerCommandHandler{measure, measureHelp},
+        "httpd" : CodeometerCommandHandler{httpd, httpdHelp},
+        "man" : CodeometerCommandHandler{man, manHelp},
+        "version" : CodeometerCommandHandler{version, versionHelp},
+        "help" : CodeometerCommandHandler{showHelpBanner, showHelpBanner},
+        "" : CodeometerCommandHandler{showHelpBanner, showHelpBanner},
     }
     returnedHandlers := commands()
     if returnedHandlers == nil {
@@ -36,8 +36,11 @@ func Test_commands(t *testing.T) {
         if !foundHandler {
             t.Errorf(`!foundHandler: %v : %v`, k, returnedHandlers)
         }
-        if f == nil {
-            t.Error(`f == nil : k=%v`, k)
+        if f.Runner == nil {
+            t.Error(`f.Runner == nil : k=%v`, k)
+        }
+        if f.Helper == nil {
+            t.Error(`f.Helper == nil : k=%v`, k)
         }
     }
 }

@@ -18,12 +18,6 @@ func showHelpBanner() int {
     return 0
 }
 
-// Shows the application's version.
-func showAppVersion() int {
-    fmt.Fprintf(os.Stdout, "codeometer-v%s\n", appVersion)
-    return 0
-}
-
 // Error handler for unknown commands.
 func unknownCommand() int {
     fmt.Fprintf(os.Stderr, "error: Unknown command: '%s'.\n", options.GetCommand())
@@ -34,7 +28,7 @@ func unknownCommand() int {
 func Run() int {
     command, found := commands()[options.GetCommand()]
     if !found {
-        command = unknownCommand
+        command = CodeometerCommandHandler{unknownCommand, nil}
     }
-    return command()
+    return command.Runner()
 }

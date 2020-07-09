@@ -24,3 +24,9 @@ func man() int {
     }
     return exitCode
 }
+
+// The 'man' command helper.
+func manHelp() int {
+    fmt.Fprintf(os.Stdout, "use: codeometer man\n")
+    return 0
+}

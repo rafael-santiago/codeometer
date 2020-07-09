@@ -7,17 +7,17 @@
 package codeometersys
 
 import (
-    "fmt"
     "os"
+    "fmt"
 )
 
-// The 'httpd' command handler.
-func httpd() int {
-    fmt.Fprintf(os.Stderr, "Not implemented.\n")
-    return 1
+// Shows the application's version.
+func version() int {
+    fmt.Fprintf(os.Stdout, "codeometer-v%s\n", appVersion)
+    return 0
 }
 
-// The 'httpd' command helper.
-func httpdHelp() int {
+func versionHelp() int {
+    fmt.Fprintf(os.Stdout, "use: codeometer version\n")
     return 0
 }

@@ -59,13 +59,18 @@ usage: codeometer <command> [options]
 
 type CodeometerHandlerFunc func()int
 
-func commands() map[string]CodeometerHandlerFunc {
-    return map[string]CodeometerHandlerFunc {
-        "measure" : measure,
-        "httpd" : httpd,
-        "man" : man,
-        "help" : showHelpBanner,
-        "version" : showAppVersion,
-        "" : showHelpBanner,
+type CodeometerCommandHandler struct {
+    Runner CodeometerHandlerFunc
+    Helper CodeometerHandlerFunc
+}
+
+func commands() map[string]CodeometerCommandHandler {
+    return map[string]CodeometerCommandHandler {
+        "measure" : CodeometerCommandHandler{measure, measureHelp},
+        "httpd" : CodeometerCommandHandler{httpd, httpdHelp},
+        "man" : CodeometerCommandHandler{man, manHelp},
+        "version" : CodeometerCommandHandler{version, versionHelp},
+        "help" : CodeometerCommandHandler{help, showHelpBanner},
+        "" : CodeometerCommandHandler{showHelpBanner, showHelpBanner},
     }
 }
