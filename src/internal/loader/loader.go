@@ -22,7 +22,7 @@ import (
 // This function expects as srcpath a file, directory or git-repo uri. At the end
 // of a successful execution codestat will gather all relevant files info. The
 // relevance a code file is given by exts... where you pass all relevant file
-// extensions, including the dot symbol.
+// extensions, including the dot symbol or not.
 func LoadCode(codestat *ruler.CodeStat, srcpath string, exts...string) error {
     var loader func(*ruler.CodeStat, string, ...string) error
 
