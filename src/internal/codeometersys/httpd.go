@@ -6,7 +6,13 @@
 // be found in the COPYING file.
 package codeometersys
 
-// Returns manual.txt file path on Linux.
-func manualPath() string {
-    return "/usr/local/share/codeometer/doc/manual.txt"
+import (
+    "fmt"
+    "os"
+)
+
+// The 'httpd' command handler.
+func httpd() int {
+    fmt.Fprintf(os.Stderr, "Not implemented.\n")
+    return 1
 }

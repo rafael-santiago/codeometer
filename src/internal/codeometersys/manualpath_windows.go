@@ -7,6 +7,6 @@
 package codeometersys
 
 // Returns manual.txt file path on Windows.
-func ManualPath() string {
+func manualPath() string {
     return "C:\\codeometer\\doc\\manual.txt"
 }

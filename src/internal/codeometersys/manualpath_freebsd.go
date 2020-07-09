@@ -7,6 +7,6 @@
 package codeometersys
 
 // Returns manual.txt file path on FreeBSD.
-func ManualPath() string {
+func manualPath() string {
     return "/usr/local/share/codeometer/doc/manual.txt"
 }

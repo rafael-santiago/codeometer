@@ -9,8 +9,8 @@ import (
     "runtime"
 )
 
-func TestManualPath(t *testing.T) {
-    manualPath := ManualPath()
+func Test_manualPath(t *testing.T) {
+    manualPath := manualPath()
     if runtime.GOOS == "linux" || runtime.GOOS == "freebsd" {
         if manualPath != "/usr/local/share/codeometer/doc/manual.txt" {
             t.Error(`manualPath != "/usr/local/share/codeometer/doc/manual.txt"`)

@@ -7,10 +7,10 @@
 package codeometersys
 
 // Application's version.
-const AppVersion = `1`
+const appVersion = `1`
 
 // Default help banner.
-const HelpBanner = `
+const helpBanner = `
                                                       ,  #
                                                       ########Y
                                                       ###########W
@@ -56,3 +56,16 @@ usage: codeometer <command> [options]
 
 * Are you a newbie? Oh! Welcome newbie! Give 'codeometer man' or 'codeometer help <command>' a try.
 `
+
+type CodeometerHandlerFunc func()int
+
+func commands() map[string]CodeometerHandlerFunc {
+    return map[string]CodeometerHandlerFunc {
+        "measure" : measure,
+        "httpd" : httpd,
+        "man" : man,
+        "help" : showHelpBanner,
+        "version" : showAppVersion,
+        "" : showHelpBanner,
+    }
+}
