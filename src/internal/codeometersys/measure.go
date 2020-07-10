@@ -181,6 +181,7 @@ func measureReport(src string, exts []string, fontSize string, wantedMeasures []
 
         estimators := []interface{}{
             &estimator.ChineseGreatWall{},
+            &estimator.MountEverest{},
             &estimator.PaulistaAvenue{},
             &estimator.ArcDeTriomphe{},
             &estimator.BigBang{},
@@ -202,6 +203,11 @@ func measureReport(src string, exts []string, fontSize string, wantedMeasures []
             switch e.(type) {
                 case *estimator.ChineseGreatWall:
                     o := e.(*estimator.ChineseGreatWall)
+                    info += o.Estimate(codestat)
+                    break
+
+                case *estimator.MountEverest:
+                    o := e.(*estimator.MountEverest)
                     info += o.Estimate(codestat)
                     break
 
