@@ -13,15 +13,15 @@ import (
 
 const kPaulistaAvenueInKM = 2.8 // Mano do ceu... eh nois!
 
-type PaulistaAvenueEstimator struct {}
+type PaulistaAvenue struct {}
 
 // Returns the size of Paulista avenue, mano.
-func (p *PaulistaAvenueEstimator) K() float64 {
+func (p *PaulistaAvenue) K() float64 {
     return kPaulistaAvenueInKM
 }
 
 // Returns a string with some estimative of your code against Paulista avenue size.
-func (p *PaulistaAvenueEstimator) Estimate(codestat *ruler.CodeStat) string {
+func (p *PaulistaAvenue) Estimate(codestat *ruler.CodeStat) string {
     km := &measurer.KMCodeStat{}
     km.Calibrate(codestat)
     return doEstimative(km, "Your code has %.2f%% of the Paulista avenue extension (%.1f km).",

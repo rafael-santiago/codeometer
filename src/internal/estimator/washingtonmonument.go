@@ -13,15 +13,15 @@ import (
 
 const kWashingtonMonumentInM = 169
 
-type WashingtonMonumentEstimator struct {}
+type WashingtonMonument struct {}
 
 // Returns the size of Washington Monument.
-func (w *WashingtonMonumentEstimator) K() float64 {
+func (w *WashingtonMonument) K() float64 {
     return kWashingtonMonumentInM
 }
 
 // Returns a string with some estimative of your code against Washington Monument size.
-func (w *WashingtonMonumentEstimator) Estimate(codestat *ruler.CodeStat) string {
+func (w *WashingtonMonument) Estimate(codestat *ruler.CodeStat) string {
     m := &measurer.MCodeStat{}
     m.Calibrate(codestat)
     return doEstimative(m, "Your code has %.2f%% of the Washington Monument's height (%.fm).",

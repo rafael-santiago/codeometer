@@ -13,15 +13,15 @@ import (
 
 const kPantheonInM = 14
 
-type PantheonEstimator struct {}
+type Pantheon struct {}
 
 // Returns the size of Pantheon.
-func (p *PantheonEstimator) K() float64 {
+func (p *Pantheon) K() float64 {
     return kPantheonInM
 }
 
 // Returns a string with some estimative of your code against Pantheon size.
-func (p *PantheonEstimator) Estimate(codestat *ruler.CodeStat) string {
+func (p *Pantheon) Estimate(codestat *ruler.CodeStat) string {
     m := &measurer.MCodeStat{}
     m.Calibrate(codestat)
     return doEstimative(m, "Your code has %.2f%% of the Pantheon's height (%.fm).",

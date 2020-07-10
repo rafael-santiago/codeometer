@@ -9,14 +9,14 @@ import (
     "internal/ruler"
 )
 
-func TestArcDeTriompheEstimatorK(t *testing.T) {
-    a := ArcDeTriompheEstimator{}
+func TestArcDeTriompheK(t *testing.T) {
+    a := ArcDeTriomphe{}
     if a.K() != 50 {
         t.Error(`a.K() != 50`)
     }
 }
 
-func TestArcDeTrimpheEstimatorEstimate(t *testing.T) {
+func TestArcDeTrimpheEstimate(t *testing.T) {
     testVector := []struct {
                     BytesTotal int64
                     ExpectedMessage string
@@ -29,7 +29,7 @@ func TestArcDeTrimpheEstimatorEstimate(t *testing.T) {
         codestat.CalibrateCourier12px()
         codestat.Files = make(map[string]ruler.CodeFileInfo)
         codestat.Files["main.go"] = ruler.CodeFileInfo{test.BytesTotal}
-        a := ArcDeTriompheEstimator{}
+        a := ArcDeTriomphe{}
         estimative := a.Estimate(codestat)
         if estimative != test.ExpectedMessage {
             t.Errorf(`estimative != test.ExpectedMessage: %v != %v`, estimative, test.ExpectedMessage)

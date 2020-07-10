@@ -9,14 +9,14 @@ import (
     "internal/ruler"
 )
 
-func TestSistineChapelEstimatorK(t *testing.T) {
-    s := SistineChapelEstimator{}
+func TestSistineChapelK(t *testing.T) {
+    s := SistineChapel{}
     if s.K() != 21 {
         t.Error(`s.K() != 21`)
     }
 }
 
-func TestSistineChapelEstimatorEstimate(t *testing.T) {
+func TestSistineChapelEstimate(t *testing.T) {
     testVector := []struct {
                     BytesTotal int64
                     ExpectedMessage string
@@ -29,7 +29,7 @@ func TestSistineChapelEstimatorEstimate(t *testing.T) {
         codestat.CalibrateCourier12px()
         codestat.Files = make(map[string]ruler.CodeFileInfo)
         codestat.Files["main.go"] = ruler.CodeFileInfo{test.BytesTotal}
-        s := SistineChapelEstimator{}
+        s := SistineChapel{}
         estimative := s.Estimate(codestat)
         if estimative != test.ExpectedMessage {
             t.Errorf(`estimative != test.ExpectedMessage: %v != %v`, estimative, test.ExpectedMessage)

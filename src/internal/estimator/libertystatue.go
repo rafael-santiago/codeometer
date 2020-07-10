@@ -13,15 +13,15 @@ import (
 
 const kLibertyStatueInM = 93
 
-type LibertyStatueEstimator struct {}
+type LibertyStatue struct {}
 
 // Returns the size of Liberty Statue.
-func (l *LibertyStatueEstimator) K() float64 {
+func (l *LibertyStatue) K() float64 {
     return kLibertyStatueInM
 }
 
 // Returns a string with some estimative of your code against Liberty Statue size.
-func (l *LibertyStatueEstimator) Estimate(codestat *ruler.CodeStat) string {
+func (l *LibertyStatue) Estimate(codestat *ruler.CodeStat) string {
     m := &measurer.MCodeStat{}
     m.Calibrate(codestat)
     return doEstimative(m, "Your code has %.2f%% of the Liberty Statue's height (%.fm).",

@@ -13,15 +13,15 @@ import (
 
 const kColiseumInM = 48
 
-type ColiseumEstimator struct {}
+type Coliseum struct {}
 
 // Returns the size of Coliseum.
-func (c *ColiseumEstimator) K() float64 {
+func (c *Coliseum) K() float64 {
     return kColiseumInM
 }
 
 // Returns a string with some estimative of your code against Coliseum size.
-func (c *ColiseumEstimator) Estimate(codestat *ruler.CodeStat) string {
+func (c *Coliseum) Estimate(codestat *ruler.CodeStat) string {
     m := &measurer.MCodeStat{}
     m.Calibrate(codestat)
     return doEstimative(m, "Your code has %.2f%% of the Coliseum's height (%.fm).",

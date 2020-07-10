@@ -13,15 +13,15 @@ import (
 
 const kWallStreetSizeInM = 800
 
-type WallStreetEstimator struct {}
+type WallStreet struct {}
 
 // Returns the size of Wall street.
-func (w *WallStreetEstimator) K() float64 {
+func (w *WallStreet) K() float64 {
     return kWallStreetSizeInM
 }
 
 // Returns a string with some estimative of your code against Wall street size.
-func (w *WallStreetEstimator) Estimate(codestat *ruler.CodeStat) string {
+func (w *WallStreet) Estimate(codestat *ruler.CodeStat) string {
     m := &measurer.MCodeStat{}
     m.Calibrate(codestat)
     return doEstimative(m, "Your code has %.2f%% of the Wall street extension (%.fm).",

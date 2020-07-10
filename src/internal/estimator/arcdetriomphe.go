@@ -13,15 +13,15 @@ import (
 
 const kArcDeTriompheInM = 50
 
-type ArcDeTriompheEstimator struct {}
+type ArcDeTriomphe struct {}
 
 // Returns the size of Arc de Triomphe.
-func (a *ArcDeTriompheEstimator) K() float64 {
+func (a *ArcDeTriomphe) K() float64 {
     return kArcDeTriompheInM
 }
 
 // Returns a string with some estimative of your code against Arc de Triomphe size.
-func (a *ArcDeTriompheEstimator) Estimate(codestat *ruler.CodeStat) string {
+func (a *ArcDeTriomphe) Estimate(codestat *ruler.CodeStat) string {
     m := &measurer.MCodeStat{}
     m.Calibrate(codestat)
     return doEstimative(m, "Your code has %.2f%% of the Arc de Triomphe's height (%.fm).",

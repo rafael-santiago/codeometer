@@ -9,14 +9,14 @@ import (
     "internal/ruler"
 )
 
-func TestNiagaraFallsEstimatorK(t *testing.T) {
-    n := NiagaraFallsEstimator{}
+func TestNiagaraFallsK(t *testing.T) {
+    n := NiagaraFalls{}
     if n.K() != 51 {
         t.Error(`n.K() != 51`)
     }
 }
 
-func TestNiagaraFallsEstimatorEstimate(t *testing.T) {
+func TestNiagaraFallsEstimate(t *testing.T) {
     testVector := []struct {
                     BytesTotal int64
                     ExpectedMessage string
@@ -29,7 +29,7 @@ func TestNiagaraFallsEstimatorEstimate(t *testing.T) {
         codestat.CalibrateCourier12px()
         codestat.Files = make(map[string]ruler.CodeFileInfo)
         codestat.Files["main.go"] = ruler.CodeFileInfo{test.BytesTotal}
-        n := NiagaraFallsEstimator{}
+        n := NiagaraFalls{}
         estimative := n.Estimate(codestat)
         if estimative != test.ExpectedMessage {
             t.Errorf(`estimative != test.ExpectedMessage: %v != %v`, estimative, test.ExpectedMessage)

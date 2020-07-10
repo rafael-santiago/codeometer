@@ -160,103 +160,103 @@ func measure() int {
         info += "\n"
 
         estimators := []interface{}{
-            &estimator.ChineseGreatWallEstimator{},
-            &estimator.PaulistaAvenueEstimator{},
-            &estimator.ArcDeTriompheEstimator{},
-            &estimator.BigBangEstimator{},
-            &estimator.ChristTheRedeemerEstimator{},
-            &estimator.ColiseumEstimator{},
-            &estimator.EiffelTowerEstimator{},
-            &estimator.EmpireStateBuildingEstimator{},
-            &estimator.IguazuFallsEstimator{},
-            &estimator.LibertyStatueEstimator{},
-            &estimator.NiagaraFallsEstimator{},
-            &estimator.PantheonEstimator{},
-            &estimator.SistineChapelEstimator{},
-            &estimator.WallStreetEstimator{},
-            &estimator.WashingtonMonumentEstimator{},
-            &estimator.FrogTravelerEstimator{},
+            &estimator.ChineseGreatWall{},
+            &estimator.PaulistaAvenue{},
+            &estimator.ArcDeTriomphe{},
+            &estimator.BigBang{},
+            &estimator.ChristTheRedeemer{},
+            &estimator.Coliseum{},
+            &estimator.EiffelTower{},
+            &estimator.EmpireStateBuilding{},
+            &estimator.IguazuFalls{},
+            &estimator.LibertyStatue{},
+            &estimator.NiagaraFalls{},
+            &estimator.Pantheon{},
+            &estimator.SistineChapel{},
+            &estimator.WallStreet{},
+            &estimator.WashingtonMonument{},
+            &estimator.FrogTraveler{},
         }
 
         for _, e := range estimators {
             switch e.(type) {
-                case *estimator.ChineseGreatWallEstimator:
-                    o := e.(*estimator.ChineseGreatWallEstimator)
+                case *estimator.ChineseGreatWall:
+                    o := e.(*estimator.ChineseGreatWall)
                     info += o.Estimate(codestat)
                     break
 
-                case *estimator.PaulistaAvenueEstimator:
-                    o := e.(*estimator.PaulistaAvenueEstimator)
+                case *estimator.PaulistaAvenue:
+                    o := e.(*estimator.PaulistaAvenue)
                     info += o.Estimate(codestat)
                    break
 
-                case *estimator.ArcDeTriompheEstimator:
-                    o := e.(*estimator.ArcDeTriompheEstimator)
+                case *estimator.ArcDeTriomphe:
+                    o := e.(*estimator.ArcDeTriomphe)
                     info += o.Estimate(codestat)
                     break
 
-                case *estimator.BigBangEstimator:
-                    o := e.(*estimator.BigBangEstimator)
+                case *estimator.BigBang:
+                    o := e.(*estimator.BigBang)
                     info += o.Estimate(codestat)
                     break
 
-                case *estimator.ChristTheRedeemerEstimator:
-                    o := e.(*estimator.ChristTheRedeemerEstimator)
+                case *estimator.ChristTheRedeemer:
+                    o := e.(*estimator.ChristTheRedeemer)
                     info += o.Estimate(codestat) 
                     break
 
-                case *estimator.ColiseumEstimator:
-                    o := e.(*estimator.ColiseumEstimator)
+                case *estimator.Coliseum:
+                    o := e.(*estimator.Coliseum)
                     info += o.Estimate(codestat)
                     break
 
-                case *estimator.EiffelTowerEstimator:
-                    o := e.(*estimator.EiffelTowerEstimator)
+                case *estimator.EiffelTower:
+                    o := e.(*estimator.EiffelTower)
                     info += o.Estimate(codestat)
                     break
 
-                case *estimator.EmpireStateBuildingEstimator:
-                    o := e.(*estimator.EmpireStateBuildingEstimator)
+                case *estimator.EmpireStateBuilding:
+                    o := e.(*estimator.EmpireStateBuilding)
                     info += o.Estimate(codestat)
                     break
 
-                case *estimator.IguazuFallsEstimator:
-                    o := e.(*estimator.IguazuFallsEstimator)
+                case *estimator.IguazuFalls:
+                    o := e.(*estimator.IguazuFalls)
                     info += o.Estimate(codestat)
                     break
 
-                case *estimator.LibertyStatueEstimator:
-                    o := e.(*estimator.LibertyStatueEstimator)
+                case *estimator.LibertyStatue:
+                    o := e.(*estimator.LibertyStatue)
                     info += o.Estimate(codestat)
                     break
 
-                case *estimator.NiagaraFallsEstimator:
-                    o := e.(*estimator.NiagaraFallsEstimator)
+                case *estimator.NiagaraFalls:
+                    o := e.(*estimator.NiagaraFalls)
                     info += o.Estimate(codestat)
                     break
 
-                case *estimator.PantheonEstimator:
-                    o := e.(*estimator.PantheonEstimator)
+                case *estimator.Pantheon:
+                    o := e.(*estimator.Pantheon)
                     info += o.Estimate(codestat)
                     break
 
-                case *estimator.SistineChapelEstimator:
-                    o := e.(*estimator.SistineChapelEstimator)
+                case *estimator.SistineChapel:
+                    o := e.(*estimator.SistineChapel)
                     info += o.Estimate(codestat)
                     break
 
-                case *estimator.WallStreetEstimator:
-                    o := e.(*estimator.WallStreetEstimator)
+                case *estimator.WallStreet:
+                    o := e.(*estimator.WallStreet)
                     info += o.Estimate(codestat)
                     break
 
-                case *estimator.WashingtonMonumentEstimator:
-                    o := e.(*estimator.WashingtonMonumentEstimator)
+                case *estimator.WashingtonMonument:
+                    o := e.(*estimator.WashingtonMonument)
                     info += o.Estimate(codestat)
                     break
 
-                case *estimator.FrogTravelerEstimator:
-                    o := e.(*estimator.FrogTravelerEstimator)
+                case *estimator.FrogTraveler:
+                    o := e.(*estimator.FrogTraveler)
                     info += o.Estimate(codestat)
                     break
             }

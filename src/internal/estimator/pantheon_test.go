@@ -9,14 +9,14 @@ import (
     "internal/ruler"
 )
 
-func TestPantheonEstimatorK(t *testing.T) {
-    p := PantheonEstimator{}
+func TestPantheonK(t *testing.T) {
+    p := Pantheon{}
     if p.K() != 14 {
         t.Error(`p.K() != 14`)
     }
 }
 
-func TestPantheonEstimatorEstimate(t *testing.T) {
+func TestPantheonEstimate(t *testing.T) {
     testVector := []struct {
                     BytesTotal int64
                     ExpectedMessage string
@@ -29,7 +29,7 @@ func TestPantheonEstimatorEstimate(t *testing.T) {
         codestat.CalibrateCourier12px()
         codestat.Files = make(map[string]ruler.CodeFileInfo)
         codestat.Files["main.go"] = ruler.CodeFileInfo{test.BytesTotal}
-        p := PantheonEstimator{}
+        p := Pantheon{}
         estimative := p.Estimate(codestat)
         if estimative != test.ExpectedMessage {
             t.Errorf(`estimative != test.ExpectedMessage: %v != %v`, estimative, test.ExpectedMessage)

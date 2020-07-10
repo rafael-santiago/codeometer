@@ -13,15 +13,15 @@ import (
 
 const kChineseGreatWallSizeInKM = 21196
 
-type ChineseGreatWallEstimator struct {}
+type ChineseGreatWall struct {}
 
 // Returns the size of Chinese great wall.
-func (c *ChineseGreatWallEstimator) K() float64 {
+func (c *ChineseGreatWall) K() float64 {
     return kChineseGreatWallSizeInKM
 }
 
 // Returns a string with some estimative of your code against Chinese great wall size.
-func (c *ChineseGreatWallEstimator) Estimate(codestat *ruler.CodeStat) string {
+func (c *ChineseGreatWall) Estimate(codestat *ruler.CodeStat) string {
     km := &measurer.KMCodeStat{}
     km.Calibrate(codestat)
     return doEstimative(km, "Your code has %.2f%% of the Chinese great wall extension (%.f km).",

@@ -9,14 +9,14 @@ import (
     "internal/ruler"
 )
 
-func TestLibertyStatueEstimatorK(t *testing.T) {
-    l := LibertyStatueEstimator{}
+func TestLibertyStatueK(t *testing.T) {
+    l := LibertyStatue{}
     if l.K() != 93 {
         t.Error(`l.K() != 93`)
     }
 }
 
-func TestLibertyStatueEstimatorEstimate(t *testing.T) {
+func TestLibertyStatueEstimate(t *testing.T) {
     testVector := []struct {
                     BytesTotal int64
                     ExpectedMessage string
@@ -29,7 +29,7 @@ func TestLibertyStatueEstimatorEstimate(t *testing.T) {
         codestat.CalibrateCourier12px()
         codestat.Files = make(map[string]ruler.CodeFileInfo)
         codestat.Files["main.go"] = ruler.CodeFileInfo{test.BytesTotal}
-        l := LibertyStatueEstimator{}
+        l := LibertyStatue{}
         estimative := l.Estimate(codestat)
         if estimative != test.ExpectedMessage {
             t.Errorf(`estimative != test.ExpectedMessage: %v != %v`, estimative, test.ExpectedMessage)

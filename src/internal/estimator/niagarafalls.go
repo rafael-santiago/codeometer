@@ -13,15 +13,15 @@ import (
 
 const kNiagaraFallsInM = 51
 
-type NiagaraFallsEstimator struct {}
+type NiagaraFalls struct {}
 
 // Returns the size of Niagara Falls.
-func (n *NiagaraFallsEstimator) K() float64 {
+func (n *NiagaraFalls) K() float64 {
     return kNiagaraFallsInM
 }
 
 // Returns a string with some estimative of your code against Niagara Falls size.
-func (n *NiagaraFallsEstimator) Estimate(codestat *ruler.CodeStat) string {
+func (n *NiagaraFalls) Estimate(codestat *ruler.CodeStat) string {
     m := &measurer.MCodeStat{}
     m.Calibrate(codestat)
     return doEstimative(m, "Your code has %.2f%% of the Niagara Falls' height (%.fm).",

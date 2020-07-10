@@ -9,14 +9,14 @@ import (
     "internal/ruler"
 )
 
-func TestFrogTravelerEstimatorK(t *testing.T) {
-    f := FrogTravelerEstimator{}
+func TestFrogTravelerK(t *testing.T) {
+    f := FrogTraveler{}
     if f.K() != 44 {
         t.Error(`f.K() != 44`)
     }
 }
 
-func TestFrogTravelerEstimatorEstimate(t *testing.T) {
+func TestFrogTravelerEstimate(t *testing.T) {
     testVector := []struct {
                     BytesTotal int64
                     ExpectedMessage string
@@ -29,7 +29,7 @@ func TestFrogTravelerEstimatorEstimate(t *testing.T) {
         codestat.CalibrateCourier12px()
         codestat.Files = make(map[string]ruler.CodeFileInfo)
         codestat.Files["main.go"] = ruler.CodeFileInfo{test.BytesTotal}
-        f := FrogTravelerEstimator{}
+        f := FrogTraveler{}
         estimative := f.Estimate(codestat)
         if estimative != test.ExpectedMessage {
             t.Errorf(`estimative != test.ExpectedMessage: %v != %v`, estimative, test.ExpectedMessage)

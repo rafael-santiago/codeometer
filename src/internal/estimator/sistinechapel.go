@@ -13,15 +13,15 @@ import (
 
 const kSistineChapelInM = 21
 
-type SistineChapelEstimator struct {}
+type SistineChapel struct {}
 
 // Returns the size of Sistine Chapel.
-func (s *SistineChapelEstimator) K() float64 {
+func (s *SistineChapel) K() float64 {
     return kSistineChapelInM
 }
 
 // Returns a string with some estimative of your code against Sistine Chapel size.
-func (s *SistineChapelEstimator) Estimate(codestat *ruler.CodeStat) string {
+func (s *SistineChapel) Estimate(codestat *ruler.CodeStat) string {
     m := &measurer.MCodeStat{}
     m.Calibrate(codestat)
     return doEstimative(m, "Your code has %.2f%% of the Sistine Chapel's height (%.fm).",

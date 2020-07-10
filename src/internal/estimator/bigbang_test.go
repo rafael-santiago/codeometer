@@ -9,14 +9,14 @@ import (
     "internal/ruler"
 )
 
-func TestBigBangEstimatorK(t *testing.T) {
-    b := BigBangEstimator{}
+func TestBigBangK(t *testing.T) {
+    b := BigBang{}
     if b.K() != 96 {
         t.Error(`b.K() != 96`)
     }
 }
 
-func TestBigBangEstimatorEstimate(t *testing.T) {
+func TestBigBangEstimate(t *testing.T) {
     testVector := []struct {
                     BytesTotal int64
                     ExpectedMessage string
@@ -29,7 +29,7 @@ func TestBigBangEstimatorEstimate(t *testing.T) {
         codestat.CalibrateCourier12px()
         codestat.Files = make(map[string]ruler.CodeFileInfo)
         codestat.Files["main.go"] = ruler.CodeFileInfo{test.BytesTotal}
-        b := BigBangEstimator{}
+        b := BigBang{}
         estimative := b.Estimate(codestat)
         if estimative != test.ExpectedMessage {
             t.Errorf(`estimative != test.ExpectedMessage: %v != %v`, estimative, test.ExpectedMessage)

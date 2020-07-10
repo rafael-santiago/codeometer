@@ -13,15 +13,15 @@ import (
 
 const kBigBangInM = 96
 
-type BigBangEstimator struct {}
+type BigBang struct {}
 
 // Returns the size of Big Bang.
-func (b *BigBangEstimator) K() float64 {
+func (b *BigBang) K() float64 {
     return kBigBangInM
 }
 
 // Returns a string with some estimative of your code against Big Bang size.
-func (b *BigBangEstimator) Estimate(codestat *ruler.CodeStat) string {
+func (b *BigBang) Estimate(codestat *ruler.CodeStat) string {
     m := &measurer.MCodeStat{}
     m.Calibrate(codestat)
     return doEstimative(m, "Your code has %.2f%% of the Big Bang's height (%.fm).",

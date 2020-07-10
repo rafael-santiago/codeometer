@@ -9,14 +9,14 @@ import (
     "internal/ruler"
 )
 
-func TestIguazuFallsEstimatorK(t *testing.T) {
-    i := IguazuFallsEstimator{}
+func TestIguazuFallsK(t *testing.T) {
+    i := IguazuFalls{}
     if i.K() != 82 {
         t.Error(`i.K() != 82`)
     }
 }
 
-func TestIguazuFallsEstimatorEstimate(t *testing.T) {
+func TestIguazuFallsEstimate(t *testing.T) {
     testVector := []struct {
                     BytesTotal int64
                     ExpectedMessage string
@@ -29,7 +29,7 @@ func TestIguazuFallsEstimatorEstimate(t *testing.T) {
         codestat.CalibrateCourier12px()
         codestat.Files = make(map[string]ruler.CodeFileInfo)
         codestat.Files["main.go"] = ruler.CodeFileInfo{test.BytesTotal}
-        i := IguazuFallsEstimator{}
+        i := IguazuFalls{}
         estimative := i.Estimate(codestat)
         if estimative != test.ExpectedMessage {
             t.Errorf(`estimative != test.ExpectedMessage: %v != %v`, estimative, test.ExpectedMessage)

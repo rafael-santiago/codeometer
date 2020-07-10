@@ -13,15 +13,15 @@ import (
 
 const kIguazuFallsInM = 82
 
-type IguazuFallsEstimator struct {}
+type IguazuFalls struct {}
 
 // Returns the size of Iguazu Falls.
-func (i *IguazuFallsEstimator) K() float64 {
+func (i *IguazuFalls) K() float64 {
     return kIguazuFallsInM
 }
 
 // Returns a string with some estimative of your code against Iguazu Falls size.
-func (i *IguazuFallsEstimator) Estimate(codestat *ruler.CodeStat) string {
+func (i *IguazuFalls) Estimate(codestat *ruler.CodeStat) string {
     m := &measurer.MCodeStat{}
     m.Calibrate(codestat)
     return doEstimative(m, "Your code has %.2f%% of the Iguazu Falls' height (%.fm).",

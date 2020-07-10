@@ -9,14 +9,14 @@ import (
     "internal/ruler"
 )
 
-func TestColiseumEstimatorK(t *testing.T) {
-    c := ColiseumEstimator{}
+func TestColiseumK(t *testing.T) {
+    c := Coliseum{}
     if c.K() != 48 {
         t.Error(`c.K() != 48`)
     }
 }
 
-func TestColiseumEstimatorEstimate(t *testing.T) {
+func TestColiseumEstimate(t *testing.T) {
     testVector := []struct {
                     BytesTotal int64
                     ExpectedMessage string
@@ -29,7 +29,7 @@ func TestColiseumEstimatorEstimate(t *testing.T) {
         codestat.CalibrateCourier12px()
         codestat.Files = make(map[string]ruler.CodeFileInfo)
         codestat.Files["main.go"] = ruler.CodeFileInfo{test.BytesTotal}
-        c := ColiseumEstimator{}
+        c := Coliseum{}
         estimative := c.Estimate(codestat)
         if estimative != test.ExpectedMessage {
             t.Errorf(`estimative != test.ExpectedMessage: %v != %v`, estimative, test.ExpectedMessage)

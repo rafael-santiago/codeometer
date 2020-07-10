@@ -13,15 +13,15 @@ import (
 
 const kEmpireStateBuildingInM = 381
 
-type EmpireStateBuildingEstimator struct {}
+type EmpireStateBuilding struct {}
 
 // Returns the size of Empire State Building.
-func (e *EmpireStateBuildingEstimator) K() float64 {
+func (e *EmpireStateBuilding) K() float64 {
     return kEmpireStateBuildingInM
 }
 
 // Returns a string with some estimative of your code against Empire State Building size.
-func (e *EmpireStateBuildingEstimator) Estimate(codestat *ruler.CodeStat) string {
+func (e *EmpireStateBuilding) Estimate(codestat *ruler.CodeStat) string {
     m := &measurer.MCodeStat{}
     m.Calibrate(codestat)
     return doEstimative(m, "Your code has %.2f%% of the Empire State Building's height (%.fm).",

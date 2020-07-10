@@ -9,14 +9,14 @@ import (
     "internal/ruler"
 )
 
-func TestChineseGreatWallEstimatorK(t *testing.T) {
-    c := ChineseGreatWallEstimator{}
+func TestChineseGreatWallK(t *testing.T) {
+    c := ChineseGreatWall{}
     if c.K() != 21196 {
         t.Error(`c.K() != 21196`)
     }
 }
 
-func TestChineseGreatWallEstimatorEstimate(t *testing.T) {
+func TestChineseGreatWallEstimate(t *testing.T) {
     testVector := []struct {
                     BytesTotal int64
                     ExpectedMessage string
@@ -29,7 +29,7 @@ func TestChineseGreatWallEstimatorEstimate(t *testing.T) {
         codestat.CalibrateCourier12px()
         codestat.Files = make(map[string]ruler.CodeFileInfo)
         codestat.Files["main.go"] = ruler.CodeFileInfo{test.BytesTotal}
-        c := ChineseGreatWallEstimator{}
+        c := ChineseGreatWall{}
         estimative := c.Estimate(codestat)
         if estimative != test.ExpectedMessage {
             t.Errorf(`estimative != test.ExpectedMessage: %v != %v`, estimative, test.ExpectedMessage)
