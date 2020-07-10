@@ -44,7 +44,7 @@ func measureHelp() int {
     return 0
 }
 
-// Build up the measure report. By the way, it does the stuff of the tool.
+// Builds up the measure report. By the way, it does the stuff of the tool.
 func measureReport(src string, exts []string, fontSize string, wantedMeasures []string,
                    statsPerFile bool, estimatives bool) (string, error) {
     if len(src) == 0 {
@@ -122,6 +122,8 @@ func measureReport(src string, exts []string, fontSize string, wantedMeasures []
     info += ".\n"
 
     if statsPerFile {
+        info += "\n"
+
         var files []string
 
         for k, _ := range codestat.Files {
@@ -168,7 +170,7 @@ func measureReport(src string, exts []string, fontSize string, wantedMeasures []
                 }
                 fileInfo += fmt.Sprintf("%.2f%s", totalDistance, wantedMeasure)
             }
-            info += fmt.Sprintf(" %s has %s.\n", file, fileInfo)
+            info += fmt.Sprintf("%s has %s.\n", file, fileInfo)
         }
 
         info += "\n"
