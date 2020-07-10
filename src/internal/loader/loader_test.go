@@ -145,7 +145,7 @@ func Test_loadCodeFile(t *testing.T) {
     }
 }
 
-func Test_loadCodeDir(t *testing.T) {
+func Test_loadCodeDirSync(t *testing.T) {
     files := []string {
         "../../codeometer.go",
         "../../internal/measurer/mi.go",
@@ -178,7 +178,59 @@ func Test_loadCodeDir(t *testing.T) {
         "../../internal/ruler/ruler.go",
     }
     codestat := &ruler.CodeStat{}
-    err := loadCodeDir(codestat, "../../", ".go")
+    err := loadCodeDirSync(codestat, "../../", ".go")
+    if err != nil {
+        t.Errorf(`err != nil: %v`, err)
+    }
+    for _, file := range files {
+        st, err := os.Stat(file)
+        if err != nil {
+            t.Errorf(`err != nil: %v`, err)
+        }
+        info, fileFound := codestat.Files[file]
+        if !fileFound {
+            t.Errorf(`!fileFound : %v`, file)
+        }
+        if st.Size() != info.BytesTotal {
+            t.Errorf(`st.Size() != info.BytesTotal: %v != %v`, st.Size(), info.BytesTotal)
+        }
+    }
+}
+
+func Test_loadCodeDirAsync(t *testing.T) {
+    files := []string {
+        "../../codeometer.go",
+        "../../internal/measurer/mi.go",
+        "../../internal/measurer/km.go",
+        "../../internal/measurer/m.go",
+        "../../internal/measurer/mm.go",
+        "../../internal/estimator/arcdetriomphe.go",
+        "../../internal/estimator/christtheredeemer.go",
+        "../../internal/estimator/empirestatebuilding.go",
+        "../../internal/estimator/iguazufalls.go",
+        "../../internal/estimator/pantheon.go",
+        "../../internal/estimator/wallstreet.go",
+        "../../internal/estimator/bigbang.go",
+        "../../internal/estimator/coliseum.go",
+        "../../internal/estimator/estimator.go",
+        "../../internal/estimator/libertystatue.go",
+        "../../internal/estimator/paulistaavenue.go",
+        "../../internal/estimator/washingtonmonument.go",
+        "../../internal/estimator/chinesegreatwall.go",
+        "../../internal/estimator/eiffeltower.go",
+        "../../internal/estimator/frogtraveler.go",
+        "../../internal/estimator/niagarafalls.go",
+        "../../internal/estimator/sistinechapel.go",
+        "../../internal/loader/loader.go",
+        "../../internal/loader/loader_test.go",
+        "../../internal/loader/getcodekey_linux.go",
+        "../../internal/loader/getcodekey_freebsd.go",
+        "../../internal/loader/getcodekey_windows.go",
+        "../../internal/magnitudes/magnitudes.go",
+        "../../internal/ruler/ruler.go",
+    }
+    codestat := &ruler.CodeStat{}
+    err := loadCodeDirAsync(codestat, "../../", ".go")
     if err != nil {
         t.Errorf(`err != nil: %v`, err)
     }

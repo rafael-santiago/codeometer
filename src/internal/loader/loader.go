@@ -8,6 +8,7 @@ package loader
 
 import (
     "internal/ruler"
+    "internal/options"
     "os"
     "fmt"
     "strings"
@@ -17,8 +18,16 @@ import (
     "bytes"
     "io"
     "os/exec"
-//    "sync"
 )
+
+const kWorkingLoadersMaxNr = 20 // INFO(Rafael): Make it configurable.
+
+var gAsyncLoadDir bool
+
+// Initializes internal stuff.
+func init() {
+    gAsyncLoadDir = options.GetBoolOption("async", false)
+}
 
 // This function expects as srcpath a file, directory or git-repo uri. At the end
 // of a successful execution codestat will gather all relevant files info. The
@@ -43,7 +52,11 @@ func LoadCode(codestat *ruler.CodeStat, srcpath string, exts...string) error {
         }
         mode := st.Mode()
         if mode.IsDir() {
-            loader = loadCodeDir
+            if !gAsyncLoadDir {
+                loader = loadCodeDirSync
+            } else {
+                loader = loadCodeDirAsync
+            }
         } else if mode.IsRegular() && strings.HasSuffix(strings.ToLower(srcpath), ".zip") {
             loader = loadZippedCode
         } else if mode.IsRegular() {
@@ -54,7 +67,6 @@ func LoadCode(codestat *ruler.CodeStat, srcpath string, exts...string) error {
                      }
         }
     }
-
     return loader(codestat, srcpath, exts...)
 }
 
@@ -88,31 +100,60 @@ func loadCodeFile(codestat *ruler.CodeStat, srcpath string, exts...string) error
     return nil
 }
 
-// Scans a directory searching for relevant files to get information.
-func loadCodeDir(codestat *ruler.CodeStat, srcpath string, exts...string) error {
+// Scans synchronously a directory searching for relevant files to get information.
+func loadCodeDirSync(codestat *ruler.CodeStat, srcpath string, exts...string) error {
     files, err := ioutil.ReadDir(srcpath)
     if err != nil {
         return err
     }
-    //errors := make(chan error, len(files))
     for _, file := range files {
         fullpath := filepath.Join(srcpath, file.Name())
-        //go func() {
-        //    err := LoadCode(codestat, fullpath, exts...)
-        //    errors <- err
-        //}()
         err := LoadCode(codestat, fullpath, exts...)
         if err != nil {
             return err
         }
     }
-    //for range files {
-    //    err = <-errors
-    //    if err != nil {
-    //        close(errors)
-    //        return err
-    //    }
-    //}
+    return nil
+}
+
+// Scans asynchronously a directory searching for relevant files to get information.
+func loadCodeDirAsync(codestat *ruler.CodeStat, srcpath string, exts...string) error {
+    files, err := ioutil.ReadDir(srcpath)
+    if err != nil {
+        return err
+    }
+    errors := make(chan error, kWorkingLoadersMaxNr)
+    load := func(codestat *ruler.CodeStat, srcpath string, exts...string) {
+                err := LoadCode(codestat, srcpath, exts...)
+                errors <- err
+    }
+    var chanNr int
+    for _, file := range files {
+        fullpath := filepath.Join(srcpath, file.Name())
+        if chanNr < kWorkingLoadersMaxNr {
+            go load(codestat, fullpath, exts...)
+            chanNr++
+        } else {
+            for n := 0; n < kWorkingLoadersMaxNr; n++ {
+                err = <-errors
+                if err != nil {
+                    close(errors)
+                    return err
+                }
+                chanNr--
+            }
+            go load(codestat, fullpath, exts...)
+            chanNr++
+        }
+    }
+    max := chanNr
+    for n := 0; n < max; n++ {
+        err = <-errors
+        if err != nil {
+            close(errors)
+            return err
+        }
+    }
 
     return nil
 }
