@@ -19,36 +19,56 @@ import (
 
 // The 'measure' command handler.
 func measure() int {
+    var exitCode int
     src := options.GetOption("src", "")
+    info, err := measureReport(src,
+                               options.GetArrayOption("exts"),
+                               options.GetOption("font-size", "12px"),
+                               options.GetArrayOption("measures", "km"),
+                               options.GetBoolOption("stats-per-file", false),
+                               options.GetBoolOption("estimatives", false))
+    if err == nil {
+        fmt.Fprintf(os.Stdout, "%s has %s", src, info)
+    } else {
+        fmt.Fprintf(os.Stderr, "%s\n", err)
+        exitCode = 1
+    }
+    return exitCode
+}
+
+// The 'measure' command helper.
+func measureHelp() int {
+    fmt.Fprintf(os.Stdout, "use: codeometer measure --src=<file path | zip file path | git repo url | directory path>\n"+
+                           "                        --exts=<extensions> [--font-size=<font-size> --measures=<measures>\n" +
+                           "                                             --stats-per-file --estimatives]\n")
+    return 0
+}
+
+// Build up the measure report. By the way, it does the stuff of the tool.
+func measureReport(src string, exts []string, fontSize string, wantedMeasures []string,
+                   statsPerFile bool, estimatives bool) (string, error) {
     if len(src) == 0 {
-        fmt.Fprintf(os.Stderr, "error: --src option is missing.\n")
-        return 1
+        return "", fmt.Errorf("error: --src option is missing.")
     }
 
-    exts := options.GetArrayOption("exts")
-
     if len(exts) == 0 {
-        fmt.Fprintf(os.Stderr, "error: --exts option is missing.\n")
-        return 1
+        return "", fmt.Errorf("error: --exts option is missing.")
     }
 
     codestat := &ruler.CodeStat{}
 
-    fontSize := options.GetOption("font-size", "12px")
     if fontSize == "12px" {
         codestat.CalibrateCourier12px()
     } else if fontSize == "10px" {
         codestat.CalibrateCourier12px()
     } else {
-        fmt.Fprintf(os.Stderr, "error: '%s' font size is invalid. It must be '--10px' or '--12px' (default).\n", fontSize)
-        return 1
+        return "", fmt.Errorf("error: '%s' font size is invalid. It must be '--10px' or '--12px' (default).", fontSize)
     }
 
     err := loader.LoadCode(codestat, src, exts...)
 
     if err != nil {
-        fmt.Fprintf(os.Stderr, "error: %s\n", err)
-        return 1
+        return "", fmt.Errorf("error: %s", err)
     }
 
     measurers := map[string]interface{}{"mi" : &measurer.MICodeStat{},
@@ -58,13 +78,11 @@ func measure() int {
 
     var info string
 
-    wantedMeasures := options.GetArrayOption("measures", "km")
-
     for _, wantedMeasure := range wantedMeasures {
         m, found := measurers[wantedMeasure]
         if !found {
-            fmt.Fprintf(os.Stderr, "error: '%s' is a unknown measure. It must be a list containing: 'mi', 'km', 'm' or 'mm'.\n", wantedMeasure)
-            return 1
+            return "", fmt.Errorf("error: '%s' is a unknown measure. It must be a list containing: " +
+                                  "'mi', 'km', 'm' or 'mm'.\n", wantedMeasure)
         }
         var totalDistance float64
         switch m.(type) {
@@ -103,7 +121,7 @@ func measure() int {
 
     info += ".\n"
 
-    if options.GetBoolOption("stats-per-file", false) {
+    if statsPerFile {
         var files []string
 
         for k, _ := range codestat.Files {
@@ -156,8 +174,10 @@ func measure() int {
         info += "\n"
     }
 
-    if options.GetBoolOption("estimatives", false) {
-        info += "\n"
+    if estimatives {
+        if !statsPerFile {
+            info += "\n"
+        }
 
         estimators := []interface{}{
             &estimator.ChineseGreatWall{},
@@ -266,16 +286,5 @@ func measure() int {
         info += "\n"
     }
 
-    fmt.Fprintf(os.Stdout, "%s has %s", src, info)
-
-    return 0
+    return info, nil
 }
-
-// The 'measure' command helper.
-func measureHelp() int {
-    fmt.Fprintf(os.Stdout, "use: codeometer measure --src=<file path | zip file path | git repo url | directory path>\n"+
-                           "                        --exts=<extensions> [--font-size=<font-size> --measures=<measures>\n" +
-                           "                                             --stats-per-file --estimatives]\n")
-    return 0
-}
-
