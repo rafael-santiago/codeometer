@@ -24,6 +24,6 @@ func (p *Pantheon) K() float64 {
 func (p *Pantheon) Estimate(codestat *ruler.CodeStat) string {
     m := &measurer.MCodeStat{}
     m.Calibrate(codestat)
-    return doEstimative(m, "Your code has %.2f%% of the Pantheon's height (%.fm).",
-                           "Pantheon's height (%.fm) has %.2f%% of your code extension (%.2fm).", p)
+    return doEstimative(m, "%s has %.2f%% of the Pantheon's height (%.fm).",
+                           "Pantheon's height (%.fm) has %.2f%% of %s extension (%.2fm).", p)
 }

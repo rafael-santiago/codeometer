@@ -24,6 +24,6 @@ func (b *BigBang) K() float64 {
 func (b *BigBang) Estimate(codestat *ruler.CodeStat) string {
     m := &measurer.MCodeStat{}
     m.Calibrate(codestat)
-    return doEstimative(m, "Your code has %.2f%% of the Big Bang's height (%.fm).",
-                           "Big Bang's height (%.fm) has %.2f%% of your code extension (%.2fm).", b)
+    return doEstimative(m, "%s has %.2f%% of the Big Bang's height (%.fm).",
+                           "Big Bang's height (%.fm) has %.2f%% of %s extension (%.2fm).", b)
 }

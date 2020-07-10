@@ -52,6 +52,7 @@ func (mi *MICodeStat) calibrateFromCodeStat(cs *ruler.CodeStat) {
     }
     mi.CharPerLine = cs.CharPerLine
     mi.CharPerPage = cs.CharPerPage
+    mi.ProjectName = cs.ProjectName
 }
 
 // Calibrates from a *MCodeStat.
@@ -64,6 +65,7 @@ func (mi *MICodeStat) calibrateFromMCodeStat(m *MCodeStat) {
     }
     mi.CharPerLine = m.CharPerLine
     mi.CharPerPage = m.CharPerPage
+    mi.ProjectName = m.ProjectName
 }
 
 // Calibrates from a *MMCodeStat.
@@ -76,6 +78,7 @@ func (mi *MICodeStat) calibrateFromMMCodeStat(mm *MMCodeStat) {
     }
     mi.CharPerLine = mm.CharPerLine
     mi.CharPerPage = mm.CharPerPage
+    mi.ProjectName = mm.ProjectName
 }
 
 // Calibrates from a *KMCodeStat.
@@ -88,6 +91,7 @@ func (mi *MICodeStat) calibrateFromKMCodeStat(km *KMCodeStat) {
     }
     mi.CharPerLine = km.CharPerLine
     mi.CharPerPage = km.CharPerPage
+    mi.ProjectName = km.ProjectName
 }
 
 // Returns in mi the width of a entire filled line.

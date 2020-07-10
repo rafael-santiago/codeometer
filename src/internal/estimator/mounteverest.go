@@ -24,6 +24,6 @@ func (m *MountEverest) K() float64 {
 func (m *MountEverest) Estimate(codestat *ruler.CodeStat) string {
     meter := &measurer.MCodeStat{}
     meter.Calibrate(codestat)
-    return doEstimative(meter, "Your code has %.2f%% of the Mount Everest's height (%.fm).",
-                               "Mount Everest's height (%.fm) has %.2f%% of your code extension (%.2fm).", m)
+    return doEstimative(meter, "%s has %.2f%% of the Mount Everest's height (%.fm).",
+                               "Mount Everest's height (%.fm) has %.2f%% of %s extension (%.2fm).", m)
 }

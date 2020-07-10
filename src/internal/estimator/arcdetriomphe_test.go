@@ -21,14 +21,15 @@ func TestArcDeTrimpheEstimate(t *testing.T) {
                     BytesTotal int64
                     ExpectedMessage string
                   }{
-                    { 10, `Your code has 0.07% of the Arc de Triomphe's height (50m).` },
-                    { 100000, `Arc de Triomphe's height (50m) has 13.80% of your code extension (362.20m).` },
+                    { 10, `main.go has 0.07% of the Arc de Triomphe's height (50m).` },
+                    { 100000, `Arc de Triomphe's height (50m) has 13.80% of main.go extension (362.20m).` },
                  }
     for _, test := range testVector {
         codestat := &ruler.CodeStat{}
         codestat.CalibrateCourier12px()
         codestat.Files = make(map[string]ruler.CodeFileInfo)
         codestat.Files["main.go"] = ruler.CodeFileInfo{test.BytesTotal}
+        codestat.ProjectName = "main.go"
         a := ArcDeTriomphe{}
         estimative := a.Estimate(codestat)
         if estimative != test.ExpectedMessage {

@@ -24,6 +24,6 @@ func (n *NiagaraFalls) K() float64 {
 func (n *NiagaraFalls) Estimate(codestat *ruler.CodeStat) string {
     m := &measurer.MCodeStat{}
     m.Calibrate(codestat)
-    return doEstimative(m, "Your code has %.2f%% of the Niagara Falls' height (%.fm).",
-                           "Niagara Falls' height (%.fm) has %.2f%% of your code extension (%.2fm).", n)
+    return doEstimative(m, "%s has %.2f%% of the Niagara Falls' height (%.fm).",
+                           "Niagara Falls' height (%.fm) has %.2f%% of %s extension (%.2fm).", n)
 }

@@ -50,6 +50,7 @@ func (km *KMCodeStat) calibrateFromCodeStat(cs *ruler.CodeStat) {
     }
     km.CharPerLine = cs.CharPerLine
     km.CharPerPage = cs.CharPerPage
+    km.ProjectName = cs.ProjectName
 }
 
 // Calibrates from a *MCodeStat.
@@ -62,6 +63,7 @@ func (km *KMCodeStat) calibrateFromMCodeStat(m *MCodeStat) {
     }
     km.CharPerLine = m.CharPerLine
     km.CharPerPage = m.CharPerPage
+    km.ProjectName = m.ProjectName
 }
 
 // Calibrates from a *MMCodeStat.
@@ -74,6 +76,7 @@ func (km *KMCodeStat) calibrateFromMMCodeStat(mm *MMCodeStat) {
     }
     km.CharPerLine = mm.CharPerLine
     km.CharPerPage = mm.CharPerPage
+    km.ProjectName = mm.ProjectName
 }
 
 // Calibrates from a *MICodeStat.
@@ -86,6 +89,7 @@ func (km *KMCodeStat) calibrateFromMICodeStat(mi *MICodeStat) {
     }
     km.CharPerLine = mi.CharPerLine
     km.CharPerPage = mi.CharPerPage
+    km.ProjectName = mi.ProjectName
 }
 
 

@@ -21,14 +21,15 @@ func TestPaulistaAvenueEstimate(t *testing.T) {
                     BytesTotal int64
                     ExpectedMessage string
                   }{
-                    { 512, `Your code has 0.07% of the Paulista avenue extension (2.8 km).` },
-                    { 512 << 11, `Paulista avenue's extension (2.8 km) has 73.73% of your code extension (3.80 km).` },
+                    { 512, `main.go has 0.07% of the Paulista avenue extension (2.8 km).` },
+                    { 512 << 11, `Paulista avenue's extension (2.8 km) has 73.73% of main.go extension (3.80 km).` },
                  }
     for _, test := range testVector {
         codestat := &ruler.CodeStat{}
         codestat.CalibrateCourier12px()
         codestat.Files = make(map[string]ruler.CodeFileInfo)
         codestat.Files["main.go"] = ruler.CodeFileInfo{test.BytesTotal}
+        codestat.ProjectName = "main.go"
         p := PaulistaAvenue{}
         estimative := p.Estimate(codestat)
         if estimative != test.ExpectedMessage {

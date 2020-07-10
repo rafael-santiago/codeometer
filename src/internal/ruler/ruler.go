@@ -20,6 +20,7 @@ type CodeStat struct {
     Files map[string]CodeFileInfo
     CharPerLine int64
     CharPerPage int64
+    ProjectName string
 }
 
 type CodingRuler interface {

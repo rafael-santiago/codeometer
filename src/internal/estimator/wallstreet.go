@@ -24,6 +24,6 @@ func (w *WallStreet) K() float64 {
 func (w *WallStreet) Estimate(codestat *ruler.CodeStat) string {
     m := &measurer.MCodeStat{}
     m.Calibrate(codestat)
-    return doEstimative(m, "Your code has %.2f%% of the Wall street extension (%.fm).",
-                           "Wall street's extension (%.fm) has %.2f%% of your code extension (%.2fm).", w)
+    return doEstimative(m, "%s has %.2f%% of the Wall street extension (%.fm).",
+                           "Wall street's extension (%.fm) has %.2f%% of %s extension (%.2fm).", w)
 }

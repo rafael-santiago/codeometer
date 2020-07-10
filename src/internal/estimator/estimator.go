@@ -27,22 +27,31 @@ func Estimate(estimator Estimator, codestat *ruler.CodeStat) string {
 func doEstimative(measurerHandle interface{}, codeIsLessMessage, codeIsGreaterMessage string,
                   estimator Estimator) string {
     var totalDistance float64
+    var projectName string
 
     switch measurerHandle.(type) {
         case *measurer.MMCodeStat:
-            totalDistance = measurerHandle.(*measurer.MMCodeStat).TotalDistance()
+            o := measurerHandle.(*measurer.MMCodeStat)
+            totalDistance = o.TotalDistance()
+            projectName = o.ProjectName
             break
 
         case *measurer.MCodeStat:
-            totalDistance = measurerHandle.(*measurer.MCodeStat).TotalDistance()
+            o := measurerHandle.(*measurer.MCodeStat)
+            totalDistance = o.TotalDistance()
+            projectName = o.ProjectName
             break
 
         case *measurer.KMCodeStat:
-            totalDistance = measurerHandle.(*measurer.KMCodeStat).TotalDistance()
+            o := measurerHandle.(*measurer.KMCodeStat)
+            totalDistance = o.TotalDistance()
+            projectName = o.ProjectName
             break
 
         case *measurer.MICodeStat:
-            totalDistance = measurerHandle.(*measurer.MICodeStat).TotalDistance()
+            o := measurerHandle.(*measurer.MICodeStat)
+            totalDistance = o.TotalDistance()
+            projectName = o.ProjectName
             break
 
         default:
@@ -54,10 +63,10 @@ func doEstimative(measurerHandle interface{}, codeIsLessMessage, codeIsGreaterMe
     k := estimator.K()
     if totalDistance < k {
         perc := (totalDistance / k) * 100
-        retval = fmt.Sprintf(codeIsLessMessage, perc, k)
+        retval = fmt.Sprintf(codeIsLessMessage, projectName, perc, k)
     } else {
         perc := (k / totalDistance) * 100
-        retval = fmt.Sprintf(codeIsGreaterMessage, k, perc, totalDistance)
+        retval = fmt.Sprintf(codeIsGreaterMessage, k, perc, projectName, totalDistance)
     }
     return retval
 }

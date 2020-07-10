@@ -14,6 +14,7 @@ import (
     "internal/loader"
     "internal/measurer"
     "internal/estimator"
+    "path/filepath"
     "sort"
 )
 
@@ -28,7 +29,7 @@ func measure() int {
                                options.GetBoolOption("stats-per-file", false),
                                options.GetBoolOption("estimatives", false))
     if err == nil {
-        fmt.Fprintf(os.Stdout, "%s has %s", src, info)
+        fmt.Fprintf(os.Stdout, "%s has %s", filepath.Base(src), info)
     } else {
         fmt.Fprintf(os.Stderr, "%s\n", err)
         exitCode = 1

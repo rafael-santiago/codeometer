@@ -21,14 +21,15 @@ func TestWashingtonMonumentEstimate(t *testing.T) {
                     BytesTotal int64
                     ExpectedMessage string
                   }{
-                    { 512, `Your code has 1.10% of the Washington Monument's height (169m).` },
-                    { 512 << 10, `Washington Monument's height (169m) has 8.90% of your code extension (1898.95m).` },
+                    { 512, `main.go has 1.10% of the Washington Monument's height (169m).` },
+                    { 512 << 10, `Washington Monument's height (169m) has 8.90% of main.go extension (1898.95m).` },
                  }
     for _, test := range testVector {
         codestat := &ruler.CodeStat{}
         codestat.CalibrateCourier12px()
         codestat.Files = make(map[string]ruler.CodeFileInfo)
         codestat.Files["main.go"] = ruler.CodeFileInfo{test.BytesTotal}
+        codestat.ProjectName = "main.go"
         w := WashingtonMonument{}
         estimative := w.Estimate(codestat)
         if estimative != test.ExpectedMessage {

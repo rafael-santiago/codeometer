@@ -24,6 +24,6 @@ func (c *ChineseGreatWall) K() float64 {
 func (c *ChineseGreatWall) Estimate(codestat *ruler.CodeStat) string {
     km := &measurer.KMCodeStat{}
     km.Calibrate(codestat)
-    return doEstimative(km, "Your code has %.2f%% of the Chinese great wall extension (%.f km).",
-                            "Chinese great wall's extension (%.f km) has %.2f%% of your code extension (%.2f km).", c)
+    return doEstimative(km, "%s has %.2f%% of the Chinese great wall extension (%.f km).",
+                            "Chinese great wall's extension (%.f km) has %.2f%% of %s extension (%.2f km).", c)
 }

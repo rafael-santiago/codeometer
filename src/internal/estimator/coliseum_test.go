@@ -21,14 +21,15 @@ func TestColiseumEstimate(t *testing.T) {
                     BytesTotal int64
                     ExpectedMessage string
                   }{
-                    { 10, `Your code has 0.08% of the Coliseum's height (48m).` },
-                    { 13300, `Coliseum's height (48m) has 99.64% of your code extension (48.17m).` },
+                    { 10, `main.go has 0.08% of the Coliseum's height (48m).` },
+                    { 13300, `Coliseum's height (48m) has 99.64% of main.go extension (48.17m).` },
                  }
     for _, test := range testVector {
         codestat := &ruler.CodeStat{}
         codestat.CalibrateCourier12px()
         codestat.Files = make(map[string]ruler.CodeFileInfo)
         codestat.Files["main.go"] = ruler.CodeFileInfo{test.BytesTotal}
+        codestat.ProjectName = "main.go"
         c := Coliseum{}
         estimative := c.Estimate(codestat)
         if estimative != test.ExpectedMessage {

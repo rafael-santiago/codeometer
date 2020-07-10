@@ -21,14 +21,15 @@ func TestWallStreetEstimate(t *testing.T) {
                     BytesTotal int64
                     ExpectedMessage string
                   }{
-                    { 512, `Your code has 0.23% of the Wall street extension (800m).` },
-                    { 512 << 10, `Wall street's extension (800m) has 42.13% of your code extension (1898.95m).` },
+                    { 512, `main.go has 0.23% of the Wall street extension (800m).` },
+                    { 512 << 10, `Wall street's extension (800m) has 42.13% of main.go extension (1898.95m).` },
                  }
     for _, test := range testVector {
         codestat := &ruler.CodeStat{}
         codestat.CalibrateCourier12px()
         codestat.Files = make(map[string]ruler.CodeFileInfo)
         codestat.Files["main.go"] = ruler.CodeFileInfo{test.BytesTotal}
+        codestat.ProjectName = "main.go"
         w := WallStreet{}
         estimative := w.Estimate(codestat)
         if estimative != test.ExpectedMessage {

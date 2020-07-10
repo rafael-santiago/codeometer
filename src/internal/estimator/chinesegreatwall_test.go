@@ -21,14 +21,15 @@ func TestChineseGreatWallEstimate(t *testing.T) {
                     BytesTotal int64
                     ExpectedMessage string
                   }{
-                    { 10, `Your code has 0.00% of the Chinese great wall extension (21196 km).` },
-                    { 12345678912, `Chinese great wall's extension (21196 km) has 47.40% of your code extension (44715.45 km).` },
+                    { 10, `main.go has 0.00% of the Chinese great wall extension (21196 km).` },
+                    { 12345678912, `Chinese great wall's extension (21196 km) has 47.40% of main.go extension (44715.45 km).` },
                  }
     for _, test := range testVector {
         codestat := &ruler.CodeStat{}
         codestat.CalibrateCourier12px()
         codestat.Files = make(map[string]ruler.CodeFileInfo)
         codestat.Files["main.go"] = ruler.CodeFileInfo{test.BytesTotal}
+        codestat.ProjectName = "main.go"
         c := ChineseGreatWall{}
         estimative := c.Estimate(codestat)
         if estimative != test.ExpectedMessage {

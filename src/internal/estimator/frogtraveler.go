@@ -24,6 +24,6 @@ func (f *FrogTraveler) K() float64 {
 func (f *FrogTraveler) Estimate(codestat *ruler.CodeStat) string {
     mm := &measurer.MMCodeStat{}
     mm.Calibrate(codestat)
-    return doEstimative(mm, "Your code has %.2f%% of the Frog-Traveler's height (%.f mm).",
-                            "Frog-Traveler's height (%.f mm) has %.2f%% of your code extension (%.2f mm).", f)
+    return doEstimative(mm, "%s has %.2f%% of the Frog-Traveler's height (%.f mm).",
+                            "Frog-Traveler's height (%.f mm) has %.2f%% of %s extension (%.2f mm).", f)
 }

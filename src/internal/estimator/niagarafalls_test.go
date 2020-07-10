@@ -21,14 +21,15 @@ func TestNiagaraFallsEstimate(t *testing.T) {
                     BytesTotal int64
                     ExpectedMessage string
                   }{
-                    { 10, `Your code has 0.07% of the Niagara Falls' height (51m).` },
-                    { 512 << 6, `Niagara Falls' height (51m) has 42.97% of your code extension (118.68m).` },
+                    { 10, `main.go has 0.07% of the Niagara Falls' height (51m).` },
+                    { 512 << 6, `Niagara Falls' height (51m) has 42.97% of main.go extension (118.68m).` },
                  }
     for _, test := range testVector {
         codestat := &ruler.CodeStat{}
         codestat.CalibrateCourier12px()
         codestat.Files = make(map[string]ruler.CodeFileInfo)
         codestat.Files["main.go"] = ruler.CodeFileInfo{test.BytesTotal}
+        codestat.ProjectName = "main.go"
         n := NiagaraFalls{}
         estimative := n.Estimate(codestat)
         if estimative != test.ExpectedMessage {

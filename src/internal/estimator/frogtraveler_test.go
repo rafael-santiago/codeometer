@@ -21,14 +21,15 @@ func TestFrogTravelerEstimate(t *testing.T) {
                     BytesTotal int64
                     ExpectedMessage string
                   }{
-                    { 10, `Your code has 82.32% of the Frog-Traveler's height (44 mm).` },
-                    { 512, `Frog-Traveler's height (44 mm) has 2.37% of your code extension (1854.44 mm).` },
+                    { 10, `main.go has 82.32% of the Frog-Traveler's height (44 mm).` },
+                    { 512, `Frog-Traveler's height (44 mm) has 2.37% of main.go extension (1854.44 mm).` },
                  }
     for _, test := range testVector {
         codestat := &ruler.CodeStat{}
         codestat.CalibrateCourier12px()
         codestat.Files = make(map[string]ruler.CodeFileInfo)
         codestat.Files["main.go"] = ruler.CodeFileInfo{test.BytesTotal}
+        codestat.ProjectName = "main.go"
         f := FrogTraveler{}
         estimative := f.Estimate(codestat)
         if estimative != test.ExpectedMessage {

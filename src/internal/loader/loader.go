@@ -25,6 +25,11 @@ import (
 // relevance a code file is given by exts... where you pass all relevant file
 // extensions, including the dot symbol or not.
 func LoadCode(codestat *ruler.CodeStat, srcpath string, exts...string) error {
+    codestat.Lock()
+    if len(codestat.ProjectName) == 0 {
+        codestat.ProjectName = filepath.Base(srcpath)
+    }
+    codestat.Unlock()
     var loader func(*ruler.CodeStat, string, ...string) error
 
     if strings.HasPrefix(srcpath, "https://") ||
