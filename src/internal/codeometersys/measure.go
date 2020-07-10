@@ -13,6 +13,7 @@ import (
     "internal/options"
     "internal/loader"
     "internal/measurer"
+    "internal/estimator"
     "sort"
 )
 
@@ -155,6 +156,116 @@ func measure() int {
         info += "\n"
     }
 
+    if options.GetBoolOption("estimatives", false) {
+        info += "\n"
+
+        estimators := []interface{}{
+            &estimator.ChineseGreatWallEstimator{},
+            &estimator.PaulistaAvenueEstimator{},
+            &estimator.ArcDeTriompheEstimator{},
+            &estimator.BigBangEstimator{},
+            &estimator.ChristTheRedeemerEstimator{},
+            &estimator.ColiseumEstimator{},
+            &estimator.EiffelTowerEstimator{},
+            &estimator.EmpireStateBuildingEstimator{},
+            &estimator.IguazuFallsEstimator{},
+            &estimator.LibertyStatueEstimator{},
+            &estimator.NiagaraFallsEstimator{},
+            &estimator.PantheonEstimator{},
+            &estimator.SistineChapelEstimator{},
+            &estimator.WallStreetEstimator{},
+            &estimator.WashingtonMonumentEstimator{},
+            &estimator.FrogTravelerEstimator{},
+        }
+
+        for _, e := range estimators {
+            switch e.(type) {
+                case *estimator.ChineseGreatWallEstimator:
+                    o := e.(*estimator.ChineseGreatWallEstimator)
+                    info += o.Estimate(codestat)
+                    break
+
+                case *estimator.PaulistaAvenueEstimator:
+                    o := e.(*estimator.PaulistaAvenueEstimator)
+                    info += o.Estimate(codestat)
+                   break
+
+                case *estimator.ArcDeTriompheEstimator:
+                    o := e.(*estimator.ArcDeTriompheEstimator)
+                    info += o.Estimate(codestat)
+                    break
+
+                case *estimator.BigBangEstimator:
+                    o := e.(*estimator.BigBangEstimator)
+                    info += o.Estimate(codestat)
+                    break
+
+                case *estimator.ChristTheRedeemerEstimator:
+                    o := e.(*estimator.ChristTheRedeemerEstimator)
+                    info += o.Estimate(codestat) 
+                    break
+
+                case *estimator.ColiseumEstimator:
+                    o := e.(*estimator.ColiseumEstimator)
+                    info += o.Estimate(codestat)
+                    break
+
+                case *estimator.EiffelTowerEstimator:
+                    o := e.(*estimator.EiffelTowerEstimator)
+                    info += o.Estimate(codestat)
+                    break
+
+                case *estimator.EmpireStateBuildingEstimator:
+                    o := e.(*estimator.EmpireStateBuildingEstimator)
+                    info += o.Estimate(codestat)
+                    break
+
+                case *estimator.IguazuFallsEstimator:
+                    o := e.(*estimator.IguazuFallsEstimator)
+                    info += o.Estimate(codestat)
+                    break
+
+                case *estimator.LibertyStatueEstimator:
+                    o := e.(*estimator.LibertyStatueEstimator)
+                    info += o.Estimate(codestat)
+                    break
+
+                case *estimator.NiagaraFallsEstimator:
+                    o := e.(*estimator.NiagaraFallsEstimator)
+                    info += o.Estimate(codestat)
+                    break
+
+                case *estimator.PantheonEstimator:
+                    o := e.(*estimator.PantheonEstimator)
+                    info += o.Estimate(codestat)
+                    break
+
+                case *estimator.SistineChapelEstimator:
+                    o := e.(*estimator.SistineChapelEstimator)
+                    info += o.Estimate(codestat)
+                    break
+
+                case *estimator.WallStreetEstimator:
+                    o := e.(*estimator.WallStreetEstimator)
+                    info += o.Estimate(codestat)
+                    break
+
+                case *estimator.WashingtonMonumentEstimator:
+                    o := e.(*estimator.WashingtonMonumentEstimator)
+                    info += o.Estimate(codestat)
+                    break
+
+                case *estimator.FrogTravelerEstimator:
+                    o := e.(*estimator.FrogTravelerEstimator)
+                    info += o.Estimate(codestat)
+                    break
+            }
+
+            info += "\n"
+        }
+        info += "\n"
+    }
+
     fmt.Fprintf(os.Stdout, "%s has %s", src, info)
 
     return 0
@@ -164,7 +275,7 @@ func measure() int {
 func measureHelp() int {
     fmt.Fprintf(os.Stdout, "use: codeometer measure --src=<file path | zip file path | git repo url | directory path>\n"+
                            "                        --exts=<extensions> [--font-size=<font-size> --measures=<measures>\n" +
-                           "                                             --stats-per-file]\n")
+                           "                                             --stats-per-file --estimatives]\n")
     return 0
 }
 
