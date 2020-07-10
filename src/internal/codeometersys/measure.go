@@ -13,6 +13,7 @@ import (
     "internal/options"
     "internal/loader"
     "internal/measurer"
+    "sort"
 )
 
 // The 'measure' command handler.
@@ -101,6 +102,59 @@ func measure() int {
 
     info += ".\n"
 
+    if options.GetBoolOption("stats-per-file", false) {
+        var files []string
+
+        for k, _ := range codestat.Files {
+            files = append(files, k)
+        }
+
+        sort.Strings(files)
+
+        for _, file := range files {
+            fileInfo := ""
+            for _, wantedMeasure := range wantedMeasures {
+                m, _ := measurers[wantedMeasure]
+                var totalDistance float64
+                switch m.(type) {
+                    case *measurer.MICodeStat:
+                        o := m.(*measurer.MICodeStat)
+                        o.Calibrate(codestat)
+                        totalDistance = o.DistancePerFile(file)
+                        break
+
+                    case *measurer.KMCodeStat:
+                        o := m.(*measurer.KMCodeStat)
+                        o.Calibrate(codestat)
+                        totalDistance = o.DistancePerFile(file)
+                        break
+
+                    case *measurer.MCodeStat:
+                        o := m.(*measurer.MCodeStat)
+                        o.Calibrate(codestat)
+                        totalDistance = o.DistancePerFile(file)
+                        break
+
+                    case *measurer.MMCodeStat:
+                        o := m.(*measurer.MMCodeStat)
+                        o.Calibrate(codestat)
+                        totalDistance = o.DistancePerFile(file)
+                        break
+                }
+                if len(fileInfo) > 0 {
+                    fileInfo += ", "
+                }
+                if len(wantedMeasure) > 1 {
+                    wantedMeasure = " " + wantedMeasure
+                }
+                fileInfo += fmt.Sprintf("%.2f%s", totalDistance, wantedMeasure)
+            }
+            info += fmt.Sprintf(" %s has %s.\n", file, fileInfo)
+        }
+
+        info += "\n"
+    }
+
     fmt.Fprintf(os.Stdout, "%s has %s", src, info)
 
     return 0
@@ -109,7 +163,8 @@ func measure() int {
 // The 'measure' command helper.
 func measureHelp() int {
     fmt.Fprintf(os.Stdout, "use: codeometer measure --src=<file path | zip file path | git repo url | directory path>\n"+
-                           "                        --exts=<extensions> --font-size=<font-size> --measures=<measures>.\n")
+                           "                        --exts=<extensions> [--font-size=<font-size> --measures=<measures>\n" +
+                           "                                             --stats-per-file]\n")
     return 0
 }
 
