@@ -18,15 +18,27 @@ import (
     "bytes"
     "io"
     "os/exec"
+    "strconv"
 )
 
-const kWorkingLoadersMaxNr = 20 // INFO(Rafael): Make it configurable.
+var gWorkingLoadersPerRecursionNr int = 20
 
 var gAsyncLoadDir bool
 
 // Initializes internal stuff.
 func init() {
     gAsyncLoadDir = options.GetBoolOption("async", false)
+    nr, err := strconv.Atoi(options.GetOption("loaders-nr",
+                                              fmt.Sprintf("%d", gWorkingLoadersPerRecursionNr)))
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "error: --loaders-nr option has invalid data : %s.\n", err)
+        os.Exit(1)
+    }
+    if nr <= 0 {
+        fmt.Fprintf(os.Stderr, "error: --loaders-nr option must be a positive number.\n")
+        os.Exit(1)
+    }
+    gWorkingLoadersPerRecursionNr = nr
 }
 
 // This function expects as srcpath a file, directory or git-repo uri. At the end
@@ -122,7 +134,7 @@ func loadCodeDirAsync(codestat *ruler.CodeStat, srcpath string, exts...string) e
     if err != nil {
         return err
     }
-    errors := make(chan error, kWorkingLoadersMaxNr)
+    errors := make(chan error, gWorkingLoadersPerRecursionNr)
     load := func(codestat *ruler.CodeStat, srcpath string, exts...string) {
                 err := LoadCode(codestat, srcpath, exts...)
                 errors <- err
@@ -130,11 +142,11 @@ func loadCodeDirAsync(codestat *ruler.CodeStat, srcpath string, exts...string) e
     var chanNr int
     for _, file := range files {
         fullpath := filepath.Join(srcpath, file.Name())
-        if chanNr < kWorkingLoadersMaxNr {
+        if chanNr < gWorkingLoadersPerRecursionNr {
             go load(codestat, fullpath, exts...)
             chanNr++
         } else {
-            for n := 0; n < kWorkingLoadersMaxNr; n++ {
+            for n := 0; n < gWorkingLoadersPerRecursionNr; n++ {
                 err = <-errors
                 if err != nil {
                     close(errors)

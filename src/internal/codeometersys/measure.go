@@ -41,7 +41,8 @@ func measure() int {
 func measureHelp() int {
     fmt.Fprintf(os.Stdout, "use: codeometer measure --src=<file path | zip file path | git repo url | directory path>\n"+
                            "                        --exts=<extensions> [--font-size=<font-size> --measures=<measures>\n" +
-                           "                                             --stats-per-file --estimatives --async]\n")
+                           "                                             --stats-per-file --estimatives --async\n" +
+                           "                                             --loaders-nr=<number>]\n")
     return 0
 }
 
