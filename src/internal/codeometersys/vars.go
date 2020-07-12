@@ -107,12 +107,6 @@ const webInterface = `
 
     <script>
         function doRequest(vdoc, userData, method) {
-            edtExt = document.getElementById("edtExt");
-            if (edtExt.value.length == 0) {
-                document.getElementById("console").className="error";
-                document.getElementById("console").innerHTML = "error: You need to indicate all relevant file extensions.";
-                return;
-            }
             try {
                 var form = document.createElement("form");
                 form.method = method;
@@ -126,6 +120,25 @@ const webInterface = `
                         form.appendChild(field);
                     }
                 }
+                chkEstimatives = document.getElementById("chkEstimatives");
+                fieldEstimatives = document.createElement("input");
+                fieldEstimatives.type = "hidden";
+                fieldEstimatives.name = "estimatives";
+                if (chkEstimatives.checked) {
+                    fieldEstimatives.value = "1";
+                } else {
+                    fieldEstimatives.value = "0";
+                }
+                form.appendChild(fieldEstimatives);
+                fieldStatsPerFile = document.createElement("input");
+                fieldStatsPerFile.type = "hidden";
+                fieldStatsPerFile.name = "statsPerFile";
+                if (chkEstimatives.checked) {
+                    fieldStatsPerFile.value = "1";
+                } else {
+                    fieldStatsPerFile.value = "0";
+                }
+                form.appendChild(fieldStatsPerFile);
                 document.body.appendChild(form);
                 form.submit();
                 document.getElementById("mainDiv").style.display = "none";
@@ -172,6 +185,12 @@ const webInterface = `
                 doUrlMeasure();
             }
         }
+        function showMoreDiv() {
+            document.getElementById("moreDiv").style.display = "block";
+        }
+        function hideMoreDiv() {
+            document.getElementById("moreDiv").style.display = "none";
+        }
     </script>
     <div class="wait" id="waitDiv" style="display: none">
         <div style="position: absolue; bottom: 50%;">
@@ -187,7 +206,7 @@ const webInterface = `
                 <div class="info">
                     <h1>Codeometer</h1>
                 </div>
-                <table border = 0>
+                <table border = 0 style="font-family: Courier">
                     <tr>
                         <td>
                             <input type="text" id="edtQuery" size=100 placeholder="Type a git-repo url and click measure or click open and select a zipped project or a source file." onkeydown="keyListener(event);">
@@ -195,17 +214,31 @@ const webInterface = `
                         <td>
                             <input type="button" id="btnMeasure" size=20 value="Measure" onclick="doUrlMeasure();">
                         </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <input type="text" id="edtExt" size=100 placeholder="Type all relevant file extensions present in the project (eg.: c,h,etc).">
-                        </td>
                         <td>
                             <input type="button" id="btnUpload" size=20 value="Open..." onclick="doFileMeasure();">
                         </td>
+                        <td>
+                            <input type="button" id="btnUpload" size=20 value="Config..." onclick="showMoreDiv();">
+                        </td>
                     </tr>
                 </table>
-                <br>
+                <div id="moreDiv" style="display: none; font-family: Courier">
+                    <table border = 0>
+                        <tr>
+                            <td>
+                                <input type="text" id="edtExt" size=76% placeholder="Type all relevant file extensions present in the project (eg.: c,h,etc).">
+                            </td>
+                            <td>
+                                <input type="checkbox" id="chkEstimatives"> Estimatives
+                            </td>
+                            <td>
+                                <input type="checkbox" id="chkStatsPerFile"> Stats per file
+                            <td>
+                                <input type="button" id="btnOk" size=20 value="Ok" onclick="hideMoreDiv();">
+                            </td>
+                        </tr>
+                    </table>
+                </div>
             </center>
             <div class="info" id="console">
                 <p align="justify">
