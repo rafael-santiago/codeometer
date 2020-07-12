@@ -84,6 +84,9 @@ func LoadCode(codestat *ruler.CodeStat, srcpath string, exts...string) error {
 
 // Checks if filename ends with some relevant file extension.
 func isRelevantFile(filename string, exts...string) bool {
+    if len(exts) == 0 {
+        return true
+    }
     for _, ext := range exts {
         if len(ext) > 0 && !strings.HasPrefix(ext, ".") {
             ext = "." + ext

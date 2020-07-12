@@ -40,9 +40,8 @@ func measure() int {
 // The 'measure' command helper.
 func measureHelp() int {
     fmt.Fprintf(os.Stdout, "use: codeometer measure --src=<file path | zip file path | git repo url | directory path>\n"+
-                           "                        --exts=<extensions> [--font-size=<font-size> --measures=<measures>\n" +
-                           "                                             --stats-per-file --estimatives --async\n" +
-                           "                                             --loaders-nr=<number>]\n")
+                           "                        [--exts=<extensions> --font-size=<font-size> --measures=<measures>\n" +
+                           "                         --stats-per-file --estimatives --async --loaders-nr=<number>]\n")
     return 0
 }
 
@@ -51,10 +50,6 @@ func measureReport(src string, exts []string, fontSize string, wantedMeasures []
                    statsPerFile bool, estimatives bool) (string, error) {
     if len(src) == 0 {
         return "", fmt.Errorf("error: --src option is missing.")
-    }
-
-    if len(exts) == 0 {
-        return "", fmt.Errorf("error: --exts option is missing.")
     }
 
     codestat := &ruler.CodeStat{}
