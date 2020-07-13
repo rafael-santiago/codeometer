@@ -246,7 +246,7 @@ const webInterface = `
     <div class="wait" id="waitDiv" style="display: none">
         <div>
             <br><br><br><br><br>
-            <center><img src="{{.waitImage}}"></center>
+            <center><img src="{{.waitImage}}" title = "Stop swearing. Your swear.jar is inflating... Go finding P vs. NP solution and coming back later."></center>
             <br><br>
         </div>
         <div class="single-info">
@@ -317,7 +317,7 @@ const webInterface = `
        </div>
        <div class="copyright">
           <div class="copyright-disclaimer">
-            (C) Copyright 2020 by Rafael Santiago
+            (C) Copyright 2020 by Rafael Santiago. Feedback, bug reports, new ideas at <a href="https://github.com/rafael-santiago/codeometer/issues" target=_vblank>here</a>.
           </div>
        </div>
     </body>
