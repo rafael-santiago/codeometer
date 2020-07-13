@@ -79,7 +79,7 @@ func measureReport(src string, exts []string, fontSize string, wantedMeasures []
         m, found := measurers[wantedMeasure]
         if !found {
             return "", fmt.Errorf("error: '%s' is a unknown measure. It must be a list containing: " +
-                                  "'mi', 'km', 'm' or 'mm'.\n", wantedMeasure)
+                                  "'mi', 'km', 'm' or 'mm'.", wantedMeasure)
         }
         var totalDistance float64
         switch m.(type) {

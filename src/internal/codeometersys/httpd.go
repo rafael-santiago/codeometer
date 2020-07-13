@@ -18,14 +18,6 @@ import (
     "path/filepath"
 )
 
-var gFontSize string
-var gWantedMeasures []string
-
-func init() {
-    gWantedMeasures = options.GetArrayOption("measures", "km")
-    gFontSize = options.GetOption("font-size", "12px")
-}
-
 // The 'httpd' command handler.
 func httpd() int {
     addr := options.GetOption("peer-addr", "")
@@ -90,15 +82,19 @@ func handle(w http.ResponseWriter, r *http.Request) {
                     fmt.Fprintf(w, "%s", expandTemplateActions(webInterface, r.Form))
                     return
                 }
+                rawMeasures := r.Form.Get("measures")
+                rawMeasures = strings.Replace(rawMeasures, " ", "", -1)
+                measures := strings.Split(rawMeasures, ",")
                 rawExts := r.Form.Get("exts")
                 rawExts = strings.Replace(rawExts, " ", "", -1)
                 exts := strings.Split(rawExts, ",")
                 data := r.Form.Get("data")
                 statsPerFile := (r.Form.Get("statsPerFile") == "1")
                 estimatives := (r.Form.Get("estimatives") == "1")
+                fontSize := r.Form.Get("fontSize")
                 if len(data) == 0 {
                     // INFO(Rafael): A Git repo url was given.
-                    info, err := measureReport(src, exts, gFontSize, gWantedMeasures, statsPerFile, estimatives)
+                    info, err := measureReport(src, exts, fontSize, measures, statsPerFile, estimatives)
                     if err == nil {
                         info := strings.Trim(info, "\n\n")
                         if estimatives || statsPerFile {
@@ -109,7 +105,11 @@ func handle(w http.ResponseWriter, r *http.Request) {
                         r.Form.Add("info", "&nbsp;" + filepath.Base(src) + " has " + strings.Replace(info, "\n", "<br>&nbsp;", -1))
                     } else {
                         r.Form.Add("div-type", "error")
-                        r.Form.Add("info", err.Error() + ". Unable to access '" + src + "'.")
+                        errMsg := err.Error()
+                        if !strings.HasSuffix(errMsg, ".") {
+                            errMsg += "."
+                        }
+                        r.Form.Add("info", errMsg + " Unable to measure '" + src + "'.")
                     }
                 }
                 // INFO(Rafael): Restoring user field values at web interface.
@@ -125,6 +125,26 @@ func handle(w http.ResponseWriter, r *http.Request) {
                 } else {
                     r.Form.Set("chkStatsPerFile", "")
                 }
+                if hasItem(measures, "km") {
+                    r.Form.Set("chkKM", "checked")
+                }
+                if hasItem(measures, "mi") {
+                    r.Form.Set("chkMI", "checked")
+                }
+                if hasItem(measures, "m") {
+                    r.Form.Set("chkM", "checked")
+                }
+                if hasItem(measures, "mm") {
+                    r.Form.Set("chkMM", "checked")
+                }
+                if fontSize == "12px" {
+                    r.Form.Set("fontSize12px", "selected")
+                    r.Form.Set("fontSize10px", "")
+                } else if fontSize == "10px" {
+                    r.Form.Set("fontSize10px", "selected")
+                    r.Form.Set("fontSize12px", "")
+                }
+                r.Form.Set("statusImage", webStatusImage)
                 fmt.Fprintf(w, "%s", expandTemplateActions(webInterface, r.Form))
             } else {
                 r.Form.Set("edtQuery", "")
@@ -134,12 +154,30 @@ func handle(w http.ResponseWriter, r *http.Request) {
                 r.Form.Set("moreDiv", "none")
                 r.Form.Add("div-type", "single-info")
                 r.Form.Add("info", "")
+                r.Form.Add("chkKM", "checked")
+                r.Form.Add("chkMI", "")
+                r.Form.Add("chkM", "")
+                r.Form.Add("chkMM", "")
+                r.Form.Add("fontSize12px", "selected")
+                r.Form.Add("fontSize10px", "")
+                r.Form.Set("statusImage", webStatusImage)
                 fmt.Fprintf(w, "%s", expandTemplateActions(webInterface, r.Form))
             }
             break
 
         default:
-            fmt.Fprintf(w, "404 error")
+            r.ParseForm()
+            r.Form.Set("statusImage", webStatusImage)
+            r.Form.Set("error", "404 Not Found")
+            var home string
+            if options.GetOption("cert", "") != "" {
+                home = "https://"
+            } else {
+                home = "http://"
+            }
+            home += options.GetOption("peer-addr", "") + "/codeometer"
+            r.Form.Set("home", home)
+            fmt.Fprintf(w, "%s", expandTemplateActions(webErrorPage, r.Form))
             break
     }
 }
@@ -152,4 +190,13 @@ func expandTemplateActions(template string, userData url.Values) string {
         expandedData = strings.Replace(expandedData, action, data, -1)
     }
     return expandedData
+}
+
+func hasItem(list []string, item string) bool {
+    for _, l := range list {
+        if l == item {
+            return true
+        }
+    }
+    return false
 }
