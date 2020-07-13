@@ -144,7 +144,7 @@ func handle(w http.ResponseWriter, r *http.Request) {
                     r.Form.Set("fontSize10px", "selected")
                     r.Form.Set("fontSize12px", "")
                 }
-                r.Form.Set("statusImage", webStatusImage)
+                r.Form.Set("waitImage", waitImage)
                 fmt.Fprintf(w, "%s", expandTemplateActions(webInterface, r.Form))
             } else {
                 r.Form.Set("edtQuery", "")
@@ -160,7 +160,7 @@ func handle(w http.ResponseWriter, r *http.Request) {
                 r.Form.Add("chkMM", "")
                 r.Form.Add("fontSize12px", "selected")
                 r.Form.Add("fontSize10px", "")
-                r.Form.Set("statusImage", webStatusImage)
+                r.Form.Set("waitImage", waitImage)
                 fmt.Fprintf(w, "%s", expandTemplateActions(webInterface, r.Form))
             }
             break
