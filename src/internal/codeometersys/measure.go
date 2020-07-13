@@ -57,7 +57,7 @@ func measureReport(src string, exts []string, fontSize string, wantedMeasures []
     if fontSize == "12px" {
         codestat.CalibrateCourier12px()
     } else if fontSize == "10px" {
-        codestat.CalibrateCourier12px()
+        codestat.CalibrateCourier10px()
     } else {
         return "", fmt.Errorf("error: '%s' font size is invalid. It must be '--10px' or '--12px' (default).", fontSize)
     }

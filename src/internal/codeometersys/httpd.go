@@ -16,6 +16,10 @@ import (
     "net/url"
     "strings"
     "path/filepath"
+    "io/ioutil"
+    "encoding/base64"
+    "regexp"
+    "runtime"
 )
 
 // The 'httpd' command handler.
@@ -73,15 +77,10 @@ func handle(w http.ResponseWriter, r *http.Request) {
         case "/codeometer":
             r.ParseForm()
             if r.Method == "POST" {
+                htmlOut := webInterface
                 //measureReport(src string, exts []string, fontSize string, wantedMeasures []string,
                 //  statsPerFile bool, estimatives bool)
                 src := r.Form.Get("src")
-                if len(src) == 0 {
-                    r.Form.Add("div-type", "error")
-                    r.Form.Add("info", "You need to specify a Git repo URL or upload a source code or zip file.")
-                    fmt.Fprintf(w, "%s", expandTemplateActions(webInterface, r.Form))
-                    return
-                }
                 rawMeasures := r.Form.Get("measures")
                 rawMeasures = strings.Replace(rawMeasures, " ", "", -1)
                 measures := strings.Split(rawMeasures, ",")
@@ -92,26 +91,7 @@ func handle(w http.ResponseWriter, r *http.Request) {
                 statsPerFile := (r.Form.Get("statsPerFile") == "1")
                 estimatives := (r.Form.Get("estimatives") == "1")
                 fontSize := r.Form.Get("fontSize")
-                if len(data) == 0 {
-                    // INFO(Rafael): A Git repo url was given.
-                    info, err := measureReport(src, exts, fontSize, measures, statsPerFile, estimatives)
-                    if err == nil {
-                        info := strings.Trim(info, "\n\n")
-                        if estimatives || statsPerFile {
-                            r.Form.Add("div-type", "info")
-                        } else {
-                            r.Form.Add("div-type", "single-info")
-                        }
-                        r.Form.Add("info", "&nbsp;" + filepath.Base(src) + " has " + strings.Replace(info, "\n", "<br>&nbsp;", -1))
-                    } else {
-                        r.Form.Add("div-type", "error")
-                        errMsg := err.Error()
-                        if !strings.HasSuffix(errMsg, ".") {
-                            errMsg += "."
-                        }
-                        r.Form.Add("info", errMsg + " Unable to measure '" + src + "'.")
-                    }
-                }
+                r.Form.Set("waitImage", waitImage)
                 // INFO(Rafael): Restoring user field values at web interface.
                 r.Form.Set("edtQuery", src)
                 r.Form.Set("edtExt", rawExts)
@@ -144,8 +124,47 @@ func handle(w http.ResponseWriter, r *http.Request) {
                     r.Form.Set("fontSize10px", "selected")
                     r.Form.Set("fontSize12px", "")
                 }
-                r.Form.Set("waitImage", waitImage)
-                fmt.Fprintf(w, "%s", expandTemplateActions(webInterface, r.Form))
+                if len(src) == 0 {
+                    r.Form.Add("div-type", "error")
+                    r.Form.Add("info", "You need to specify a Git repo URL or upload a source code or zip file.")
+                } else {
+                    if len(data) == 0 {
+                        // INFO(Rafael): A Git repo url was given.
+                        makeHTMLReport(src, exts, fontSize, measures, statsPerFile, estimatives, &r.Form)
+                    } else {
+                        // INFO(Rafael): A file was uploaded.
+                        tempDir, errTemp := ioutil.TempDir("", "codeometer-temp")
+                        if errTemp != nil {
+                            r.Form.Add("div-type", "error")
+                            r.Form.Add("info", errTemp.Error())
+                        } else {
+                            defer os.RemoveAll(tempDir)
+                            data, err := base64.StdEncoding.DecodeString(data)
+                            if err != nil {
+                                r.Form.Add("div-type", "error")
+                                r.Form.Add("info", err.Error())
+                            } else {
+                                fileName := filepath.Base(src)
+                                if runtime.GOOS != "windows" {
+                                    pattern := regexp.MustCompile(`.*\\`)
+                                    fileName = string(pattern.ReplaceAll([]byte(fileName), []byte("")))
+                                }
+                                src = filepath.Join(tempDir, fileName)
+                                err := ioutil.WriteFile(src, data, os.ModePerm)
+                                if err != nil {
+                                    r.Form.Add("div-type", "error")
+                                    r.Form.Add("info", err.Error())
+                                } else {
+                                    makeHTMLReport(src, exts, fontSize, measures, statsPerFile, estimatives, &r.Form,
+                                                   tempDir, fileName)
+                                    r.Form.Set("edtQuery", "")
+                                }
+                            }
+                        }
+                    }
+                    htmlOut = expandTemplateActions(webInterface, r.Form)
+                    fmt.Fprintf(w, "%s", htmlOut)
+                }
             } else {
                 r.Form.Set("edtQuery", "")
                 r.Form.Set("edtExt", "")
@@ -199,4 +218,37 @@ func hasItem(list []string, item string) bool {
         }
     }
     return false
+}
+
+func makeHTMLReport(src string, exts []string, fontSize string, wantedMeasures []string,
+                    statsPerFile bool, estimatives bool, userData *url.Values, tempDirAndFileName...string) {
+    var effectiveSrc string
+    if len(tempDirAndFileName) < 2 {
+        effectiveSrc = src
+    } else {
+        wd, err := os.Getwd()
+        if err != nil {
+            defer os.Chdir(wd)
+        }
+        os.Chdir(tempDirAndFileName[0])
+        effectiveSrc = tempDirAndFileName[1]
+    }
+    info, err := measureReport(effectiveSrc, exts, fontSize, wantedMeasures, statsPerFile, estimatives)
+    if err == nil {
+        info := strings.Trim(info, "\n\n")
+        if estimatives || statsPerFile {
+            userData.Add("div-type", "info")
+        } else {
+            userData.Add("div-type", "single-info")
+        }
+        userData.Add("info", "&nbsp;" + filepath.Base(src) + " has " +
+                             strings.Replace(info, "\n", "<br>&nbsp;", -1))
+    } else {
+        userData.Add("div-type", "error")
+        errMsg := err.Error()
+        if !strings.HasSuffix(errMsg, ".") {
+            errMsg += "."
+        }
+        userData.Add("info", errMsg + " Unable to measure '" + src + "'.")
+    }
 }
