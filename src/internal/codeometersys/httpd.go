@@ -13,7 +13,18 @@ import (
     "internal/options"
     "os/signal"
     "syscall"
+    "net/url"
+    "strings"
+    "path/filepath"
 )
+
+var gFontSize string
+var gWantedMeasures []string
+
+func init() {
+    gWantedMeasures = options.GetArrayOption("measures", "km")
+    gFontSize = options.GetOption("font-size", "12px")
+}
 
 // The 'httpd' command handler.
 func httpd() int {
@@ -68,10 +79,62 @@ func listen(peerAddr string) {
 func handle(w http.ResponseWriter, r *http.Request) {
     switch r.URL.Path {
         case "/codeometer":
+            r.ParseForm()
             if r.Method == "POST" {
-                fmt.Fprintf(w, "codeometer post")
+                //measureReport(src string, exts []string, fontSize string, wantedMeasures []string,
+                //  statsPerFile bool, estimatives bool)
+                src := r.Form.Get("src")
+                if len(src) == 0 {
+                    r.Form.Add("div-type", "error")
+                    r.Form.Add("info", "You need to specify a Git repo URL or upload a source code or zip file.")
+                    fmt.Fprintf(w, "%s", expandTemplateActions(webInterface, r.Form))
+                    return
+                }
+                rawExts := r.Form.Get("exts")
+                rawExts = strings.Replace(rawExts, " ", "", -1)
+                exts := strings.Split(rawExts, ",")
+                data := r.Form.Get("data")
+                statsPerFile := (r.Form.Get("statsPerFile") == "1")
+                estimatives := (r.Form.Get("estimatives") == "1")
+                if len(data) == 0 {
+                    // INFO(Rafael): A Git repo url was given.
+                    info, err := measureReport(src, exts, gFontSize, gWantedMeasures, statsPerFile, estimatives)
+                    if err == nil {
+                        info := strings.Trim(info, "\n\n")
+                        if estimatives || statsPerFile {
+                            r.Form.Add("div-type", "info")
+                        } else {
+                            r.Form.Add("div-type", "single-info")
+                        }
+                        r.Form.Add("info", "&nbsp;" + filepath.Base(src) + " has " + strings.Replace(info, "\n", "<br>&nbsp;", -1))
+                    } else {
+                        r.Form.Add("div-type", "error")
+                        r.Form.Add("info", err.Error() + ". Unable to access '" + src + "'.")
+                    }
+                }
+                // INFO(Rafael): Restoring user field values at web interface.
+                r.Form.Set("edtQuery", src)
+                r.Form.Set("edtExt", rawExts)
+                if estimatives {
+                    r.Form.Set("chkEstimatives", "checked")
+                } else {
+                    r.Form.Set("chkEstimatives", "")
+                }
+                if statsPerFile {
+                    r.Form.Set("chkStatsPerFile", "checked")
+                } else {
+                    r.Form.Set("chkStatsPerFile", "")
+                }
+                fmt.Fprintf(w, "%s", expandTemplateActions(webInterface, r.Form))
             } else {
-                fmt.Fprintf(w, "codeometer get")
+                r.Form.Set("edtQuery", "")
+                r.Form.Set("edtExt", "")
+                r.Form.Set("chkEstimatives", "")
+                r.Form.Set("chkStatsPerFile", "")
+                r.Form.Set("moreDiv", "none")
+                r.Form.Add("div-type", "single-info")
+                r.Form.Add("info", "")
+                fmt.Fprintf(w, "%s", expandTemplateActions(webInterface, r.Form))
             }
             break
 
@@ -79,4 +142,14 @@ func handle(w http.ResponseWriter, r *http.Request) {
             fmt.Fprintf(w, "404 error")
             break
     }
+}
+
+func expandTemplateActions(template string, userData url.Values) string {
+    expandedData := template
+    for k, _ := range userData {
+        action := "{{." + k + "}}"
+        data := userData.Get(k)
+        expandedData = strings.Replace(expandedData, action, data, -1)
+    }
+    return expandedData
 }
