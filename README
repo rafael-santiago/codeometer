@@ -58,12 +58,127 @@ I do not want to depress you, REALLY. It is only about having fun and laughing a
 
 Calm down, slaughter your ego (killing it is never enough) and have fun! :)
 
+How many kilometers has codeometer?
+-----------------------------------
+
+Only considering implementation and test files (v1), codeometer says that itself has about 6.83 km.
+
+How can I get the sources files?
+--------------------------------
+
+The easiest way is as follows:
+
+    cockyDevel@RedBarn:~/src# git clone https://github.com/rafael-santiago/codeometer
+    cockyDevel@RedBarn:~/src# _
+
+Done!
+
 How can I build codeometer?
 ---------------------------
 
-...
+Codeometer is a Golang project. The easiest way is as follows:
+
+    cockyDevel@RedBarn:~/src# cd codeometer/src
+    cockyDevel@RedBarn:~/src/codeometer/src# go build
+    cockyDevel@RedBarn:~/src/codeometer/src# _
+
+If you want a more robust build with an installer and stuff. You need to install my build system called Hefesto. Hefesto is
+available at <https://github.com/rafael-santiago/hefesto>. After following the steps to put Hefesto working on your system,
+do the following:
+
+    cockyDevel@RedBarn:~/src# git clone https://github.com/rafael-santiago/helios
+    cockyDevel@RedBarn:~/src# cd helios
+    cockyDevel@RedBarn:~/src/helios# hefesto --install=go-toolset,go-dep-scanner
+    cockyDevel@RedBarn:~/src/helios# cd ..
+    cockyDevel@RedBarn:~/src# rm -rf helios
+    cockyDevel@RedBarn:~/src# git clone https://github.com/rafael-santiago/codeometer
+    cockyDevel@RedBarn:~/src# cd codeometer/src
+    cockyDevel@RedBarn:~/src/codeometer/src# hefesto
+    cockyDevel@RedBarn:~/src/codeometer/src# _
+
+Once built, you can install codeometer by running the install build sub-task:
+
+    cockyDevel@RedBarn:~/src/codeometer/src# hefesto --install
+    cockyDevel@RedBarn:~/src/codeometer/src# _
+
+If you have intentions of running a secure codeometer webserver, you can make its certificate by running the make-cert build
+sub-task:
+
+    cockyDevel@RedBarn:~/src/codeometer/src# hefesto --make-cert
+    cockyDevel@RedBarn:~/src/codeometer/src# _
 
 How can I  use codeometer?
 --------------------------
 
-...
+You can use codeometer as a good and old command line tool or you can you it from your web browser.
+
+In order to use codeometer from your command line you need to run the measure command. By default this command only expects
+a file or directory path or still a url to a git repo.
+
+    cockyDevel@RedBarn:~/src# codeometer measure --src=https://github.com/you/your-project
+    cockyDevel@RedBarn:~/src# _
+
+The command measure also accepts the options: --exts, --font-size, --measures, --stats-per-file, --estimatives, --async and
+--loaders-nr.
+
+The option --exts is where you specify which file extensions are relevant (considered as code):
+
+    cockyDevel@RedBarn:~/src# codeometer measure --src=https://github.com/you/your-cpp-project --exts=.cpp,.hpp,c,h
+    cockyDevel@RedBarn:~/src# _
+
+When --exts is not passed, all files will be relevant.
+
+The option --font-size is the option that specifies the font size of your code. There are two: '10px' and '12px' (the default):
+
+    cockyDevel@RedBarn:~/src# codeometer measure --src=https://github.com/you/your-cpp-project --font-size=10px
+    cockyDevel@RedBarn:~/src# _
+
+The option --measures specifies which real world unit of measurement will be considered by the tool. It accepts a list that
+could be contains: 'km', 'mi', 'm', 'mm'. When --measures is not passed, only kilometer measure is considered:
+
+    cockyDevel@RedBarn:~/src# codeometer measure --src=https://github.com/you/your-go-project --measures=km,mi,m,mm
+    cockyDevel@RedBarn:~/src# _
+
+The option --stats-per-file when passed makes codeometer to include a measurement report for each relevant found file.
+By default this individual report is disabled:
+
+    cockyDevel@RedBarn:~/src# codeometer measure --src=https://github.com/you/your-go-project --stats-per-file
+    cockyDevel@RedBarn:~/src# _
+
+The option --estimatives asks codeometer to include estimatives of the measured code against the measures of famous monuments
+and places. By default this estimative is not included:
+
+    cockyDevel@RedBarn:~/src# codeometer measure --src=https://github.com/you/your-go-project --estimatives
+    cockyDevel@RedBarn:~/src# _
+
+The option --async asks codeometer to use a more concurrent code scanning. By default the code scanning is synchronous (one
+file at a time). The option --loaders-nr works together with --async. With --loaders-nr you can indicate how many concurrent
+scans will be allowed by recursion (the default is 20):
+
+    cockyDevel@RedBarn:~/src# codeometer measure --src=https://github.com/you/your-go-project --loaders-nr=10 --async
+    cockyDevel@RedBarn:~/src# _
+
+If you have been facing errors when running codeometer with --async option, try to decrease the loaders number with
+--loader-nr.
+
+Now you know all aspects about the measure command.
+
+If you want to use codeometer as a web tool you should use httpd command. This is the easiest way of running it:
+
+    cockyDevel@RedBarn:~/src# codeometer httpd --peer-addr=127.0.0.1:8080
+    cockyDevel@RedBarn:~/src# _
+
+Now, all you should do is to access from your browser the address <http://127.0.0.1:8080/codeometer>.
+
+When you specify the loopback address, only you will be able to access the server. If you want more users accessing it
+besides you, inform in --peer-addr your network address.
+
+What about a secure server? If you want it, you need to specify the certificate and key file paths with the --cert and
+--key options repectively:
+
+    cockyDevel@RedBarn:~/src# codeometer httpd --peer-addr=RedBarn:8080 --cert=RedBarn.crt --key=RedBarn.key
+    cockyDevel@RedBarn:~/src# _
+
+The httpd command also supports the --async and --loaders-nr.
+
+Now you know the entire tool. I hope you like codeometer. Enjoy!
