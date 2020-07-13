@@ -201,6 +201,7 @@ func handle(w http.ResponseWriter, r *http.Request) {
     }
 }
 
+// Expands all template actions from the passed template based on passed url.Values.
 func expandTemplateActions(template string, userData url.Values) string {
     expandedData := template
     for k, _ := range userData {
@@ -211,6 +212,7 @@ func expandTemplateActions(template string, userData url.Values) string {
     return expandedData
 }
 
+// Verifies the existence of a passed item inside the passed list.
 func hasItem(list []string, item string) bool {
     for _, l := range list {
         if l == item {
@@ -220,6 +222,7 @@ func hasItem(list []string, item string) bool {
     return false
 }
 
+// Gets plain text report and make it a HTML report.
 func makeHTMLReport(src string, exts []string, fontSize string, wantedMeasures []string,
                     statsPerFile bool, estimatives bool, userData *url.Values, tempDirAndFileName...string) {
     var effectiveSrc string

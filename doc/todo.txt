@@ -1,8 +1,8 @@
-(A) Implement httpd command. +Evol
 (A) Finish up documentation. +Documentation
 (A) Write a man page for Unix-like environments. +Documentation
 (A) Write installer/uninstaller. +Build
 (A) Write certificate maker. +Build
+x (A) Implement httpd command. +Evol
 x (A) Make a more sane asynchronous loadCodeDir. +Improvement,+Evol
 x (A) Implement measure command. +Evol
 x (A) Implement command line portion of the main package. +Evol
