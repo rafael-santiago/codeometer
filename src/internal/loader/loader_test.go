@@ -11,6 +11,7 @@ import (
     "internal/ruler"
     "archive/zip"
     "io/ioutil"
+    "strings"
 )
 
 func TestLoadCode(t *testing.T) {
@@ -54,6 +55,9 @@ func TestLoadCode(t *testing.T) {
         st, err := os.Stat(file)
         if err != nil {
             t.Errorf(`err != nil: %v`, err)
+        }
+        if runtime.GOOS == "windows" {
+            file = strings.Replace(file, "/", "\\", -1)
         }
         info, fileFound := codestat.Files[file]
         if !fileFound {
@@ -112,7 +116,7 @@ func Test_getCodeKey(t *testing.T) {
     for _, test := range testVector {
         key := getCodeKey(test.SrcPath)
         if key != test.Expected {
-            t.Errorf(`key != test.Expected : %v != %v`, key, test.SrcPath)
+            t.Errorf(`key != test.Expected : %v != %v`, key, test.Expected)
         }
     }
 }
@@ -187,6 +191,9 @@ func Test_loadCodeDirSync(t *testing.T) {
         if err != nil {
             t.Errorf(`err != nil: %v`, err)
         }
+        if runtime.GOOS == "windows" {
+            file = strings.Replace(file, "/", "\\", -1)
+        }
         info, fileFound := codestat.Files[file]
         if !fileFound {
             t.Errorf(`!fileFound : %v`, file)
@@ -239,6 +246,9 @@ func Test_loadCodeDirAsync(t *testing.T) {
         if err != nil {
             t.Errorf(`err != nil: %v`, err)
         }
+        if runtime.GOOS == "windows" {
+            file = strings.Replace(file, "/", "\\", -1)
+        }
         info, fileFound := codestat.Files[file]
         if !fileFound {
             t.Errorf(`!fileFound : %v`, file)
@@ -276,6 +286,9 @@ func Test_loadZippedCode(t *testing.T) {
         st, err := os.Stat(file)
         if err != nil {
             t.Error(`err != nil: %v`, err)
+        }
+        if runtime.GOOS == "windows" {
+            file = strings.Replace(file, "/", "\\", -1)
         }
         info, fileFound := codestat.Files[file]
         if !fileFound {
@@ -331,6 +344,9 @@ func OffTest_loadGitRepoCode(t *testing.T) {
         st, err := os.Stat(file.Filepath)
         if err != nil {
             t.Errorf(`err != nil: %v`, err)
+        }
+        if runtime.GOOS == "windows" {
+            file.Key = strings.Replace(file.Key, "/", "\\", -1)
         }
         info, fileFound := codestat.Files[file.Key]
         if !fileFound {
