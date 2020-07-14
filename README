@@ -63,6 +63,12 @@ How many kilometers has codeometer?
 
 Only considering implementation and test files (v1), codeometer says that itself has about 6.83 km.
 
+What are the supported platform?
+--------------------------------
+
+Until now I have written codeometer thinking about Linux, FreeBSD and Windows. Anyway is pretty simple make it run
+on other platforms.
+
 How can I get the sources files?
 --------------------------------
 
@@ -101,10 +107,19 @@ Once built, you can install codeometer by running the install build sub-task:
     cockyDevel@RedBarn:~/src/codeometer/src# hefesto --install
     cockyDevel@RedBarn:~/src/codeometer/src# _
 
+On Windows it is installed in C:\codeometer and the application is exported, you will be able to access it from anywhere on
+command prompt. On Linux and FreeBSD codeometer is installed in /usr/local/share and /usr/local/bin, you also have a man
+page.
+
+If you want to uninstall it:
+
+    cockyDevel@RedBarn:~/src/codeometer/src# hefesto --uninstall
+    cockyDevel@RedBarn:~/src/codeometer/src# _
+
 If you have intentions of running a secure codeometer webserver, you can make its certificate by running the make-cert build
 sub-task:
 
-    cockyDevel@RedBarn:~/src/codeometer/src# hefesto --make-cert
+    cockyDevel@RedBarn:~/src/codeometer/src# hefesto --make-cert --server-crt=RedBard.crt --server-key=RedBarn.key
     cockyDevel@RedBarn:~/src/codeometer/src# _
 
 How can I  use codeometer?
@@ -181,4 +196,14 @@ What about a secure server? If you want it, you need to specify the certificate 
 
 The httpd command also supports the --async and --loaders-nr.
 
-Now you know the entire tool. I hope you like codeometer. Enjoy!
+Now you know the entire tool. If in the future you want to a quick help give it codeometer help command a try:
+
+    cockyDevel@RedBarn:~/src# codeometer help measure
+    cockyDevel@RedBarn:~/src# codeometer help httpd
+
+In order to read the manual:
+
+    cockyDevel@RedBarn:~/src# codeometer man
+    cockyDevel@RedBarn:~/src# _
+
+That's it. I hope you like codeometer. Enjoy!

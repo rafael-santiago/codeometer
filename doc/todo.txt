@@ -1,6 +1,6 @@
-(A) Write a man page for Unix-like environments. +Documentation
-(A) Write installer/uninstaller. +Build
-(A) Write certificate maker. +Build
+x (A) Write a man page for Unix-like environments. +Documentation
+x (A) Write installer/uninstaller. +Build
+x (A) Write certificate maker. +Build
 x (A) Finish up documentation. +Documentation
 x (A) Implement httpd command. +Evol
 x (A) Make a more sane asynchronous loadCodeDir. +Improvement,+Evol

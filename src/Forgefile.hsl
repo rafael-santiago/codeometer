@@ -6,6 +6,7 @@
 
 include ~/toolsets/go/go.hsl
 include ~/fsutil.hsl
+include Installer.hsl
 
 var src type list;
 var dep type string;
@@ -13,10 +14,11 @@ var dep type string;
 project codeometer : toolset "go" : dependencies $dep : $src;
 
 codeometer.prologue() {
+    installer();
     var option type list;
-    $option = hefesto.sys.get_option("make-certificate");
+    $option = hefesto.sys.get_option("make-cert");
     if ($option.count() > 0) {
-        make_certificate();
+        make_cert();
     }
     setup_gopath();
     $src.ls(".*\\.go$");
@@ -61,7 +63,7 @@ local function setup_gopath() : result type none {
     }
 }
 
-local function make_certificate() : result type none {
+local function make_cert() : result type none {
     var key type list;
     $key = hefesto.sys.get_option("server-key");
     if ($key.count() == 0) {
