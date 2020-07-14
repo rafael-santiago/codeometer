@@ -107,15 +107,23 @@ func handle(w http.ResponseWriter, r *http.Request) {
                 }
                 if hasItem(measures, "km") {
                     r.Form.Set("chkKM", "checked")
+                } else {
+                    r.Form.Set("chkKM", "")
                 }
                 if hasItem(measures, "mi") {
                     r.Form.Set("chkMI", "checked")
+                } else {
+                    r.Form.Set("chkMI", "")
                 }
                 if hasItem(measures, "m") {
                     r.Form.Set("chkM", "checked")
+                } else {
+                    r.Form.Set("chkM", "")
                 }
                 if hasItem(measures, "mm") {
                     r.Form.Set("chkMM", "checked")
+                } else {
+                    r.Form.Set("chkMM", "")
                 }
                 if fontSize == "12px" {
                     r.Form.Set("fontSize12px", "selected")

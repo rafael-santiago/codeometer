@@ -196,6 +196,8 @@ What about a secure server? If you want it, you need to specify the certificate 
 
 The httpd command also supports the --async and --loaders-nr.
 
+At server-side, type CTRL + c or send a SIGTERM or SIGINT to codemometer' process thus you will gracefully exit its web server.
+
 Now you know the entire tool. If in the future you want to a quick help give it codeometer help command a try:
 
     cockyDevel@RedBarn:~/src# codeometer help measure
