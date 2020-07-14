@@ -42,7 +42,7 @@ func httpd() int {
 func httpdHelp() int {
     fmt.Fprintf(os.Stdout, "use: codeometer httpd --peer-addr=<host:port>\n"+
                            "                       [--cert=<cert file path> --key=<key file path>\n" +
-                           "                        --async --loaders-nr=<number>]\n")
+                           "                        --async --loaders-nr=<number> --subtask-timeout=<duration string>]\n")
     return 0
 }
 

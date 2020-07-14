@@ -1,3 +1,4 @@
+x (A) Define a timeout to git clone subtasks. +Improvement
 x (A) Write a man page for Unix-like environments. +Documentation
 x (A) Write installer/uninstaller. +Build
 x (A) Write certificate maker. +Build

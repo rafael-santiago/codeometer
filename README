@@ -133,8 +133,8 @@ a file or directory path or still a url to a git repo.
     cockyDevel@RedBarn:~/src# codeometer measure --src=https://github.com/you/your-project
     cockyDevel@RedBarn:~/src# _
 
-The command measure also accepts the options: --exts, --font-size, --measures, --stats-per-file, --estimatives, --async and
---loaders-nr.
+The command measure also accepts the options: --exts, --font-size, --measures, --stats-per-file, --estimatives, --async,
+--loaders-nr and --subtask-timeout.
 
 The option --exts is where you specify which file extensions are relevant (considered as code):
 
@@ -176,6 +176,14 @@ scans will be allowed by recursion (the default is 20):
 If you have been facing errors when running codeometer with --async option, try to decrease the loaders number with
 --loader-nr.
 
+The option --subtask-timeout defines the maximum duration time of a subtask executed by codeometer. Until now it is used to
+avoid git cloning operations being run "forever". When not specified the default timeout is 10 minutes. The format of duration
+time is a positive number followed by one of the following valid time units: ns, ms, s, m, h. If we want a timeout of one hour
+and a half:
+
+    cockyDevel@RedBarn:~/src# codeometer measure --src=https://github.com/you/your-go-project --subtask-timeout=1h30m
+    cockyDevel@RedBarn:~/src# _
+
 Now you know all aspects about the measure command.
 
 If you want to use codeometer as a web tool you should use httpd command. This is the easiest way of running it:
@@ -194,7 +202,7 @@ What about a secure server? If you want it, you need to specify the certificate 
     cockyDevel@RedBarn:~/src# codeometer httpd --peer-addr=RedBarn:8080 --cert=RedBarn.crt --key=RedBarn.key
     cockyDevel@RedBarn:~/src# _
 
-The httpd command also supports the --async and --loaders-nr.
+The httpd command also supports the --async, --loaders-nr and --subtask-timeout.
 
 At server-side, type CTRL + c or send a SIGTERM or SIGINT to codemometer' process thus you will gracefully exit its web server.
 

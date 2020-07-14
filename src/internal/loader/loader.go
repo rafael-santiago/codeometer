@@ -19,11 +19,14 @@ import (
     "io"
     "os/exec"
     "strconv"
+    "time"
 )
 
 var gWorkingLoadersPerRecursionNr int = 20
 
 var gAsyncLoadDir bool
+
+var gSubtaskTimeout string = "10m"
 
 // Initializes internal stuff.
 func init() {
@@ -39,6 +42,12 @@ func init() {
         os.Exit(1)
     }
     gWorkingLoadersPerRecursionNr = nr
+    gSubtaskTimeout = options.GetOption("subtask-timeout", gSubtaskTimeout)
+    _, err = time.ParseDuration(gSubtaskTimeout)
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "error: --subtask-timeout has invalid value : %s.\n", err)
+        os.Exit(1)
+    }
 }
 
 // This function expects as srcpath a file, directory or git-repo uri. At the end
@@ -219,9 +228,19 @@ func loadGitRepoCode(codestat *ruler.CodeStat, srcpath string, exts...string) er
     }
     defer os.RemoveAll(tempdir)
     cmd := exec.Command("git", "clone", srcpath, "--recursive", tempdir)
-    errCmd := cmd.Run()
-    if errCmd != nil {
-        return errCmd
+    errChan := make(chan error, 1)
+    go func() {
+        errChan <- cmd.Run()
+    }()
+    smt, _ := time.ParseDuration(gSubtaskTimeout)
+    select {
+        case errCmd := <-errChan:
+            if errCmd != nil {
+                return errCmd
+            }
+        case <-time.After(smt):
+            cmd.Process.Kill()
+            return fmt.Errorf("Git clone aborted due to processing timeout.")
     }
     return LoadCode(codestat, tempdir, exts...)
 }
