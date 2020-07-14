@@ -1,0 +1,19 @@
+1. Latest releases are in the top.
+2. Usually, I try to do my best in order to bring you 'RELNOTES' instead of notes from hell ;)
+
+    Rafael
+--
+v1 [git-tag: 'v1']
+
+    Features:
+
+        - Measure command. Available measures: km, mi, m, mm.
+        - HTTPd command.
+        - Available font sizes: 10px, 12px (Courier).
+        - Available estimators: Arc de Triomphe, Big Bang, Chinese Great Wall, Chirst the Redeemer, Coliseum, Eiffel Tower,
+          Empire state building, Frog Traveler, Iguazu Falls, Liberty Statue, Mount Everest, Niagara Falls, Pantheon,
+          Paulista Avenue (é nóis), Sistine Chapel, Wall Street, Washington Monument.
+
+    Bugfixes:
+
+        - None! :) But this is the first version...
