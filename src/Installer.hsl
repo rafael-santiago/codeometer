@@ -1,0 +1,235 @@
+#                        Copyright (C) 2020 Rafael Santiago
+#
+# Use of this source is governed by GPL-v2 license that can
+# be found in the COPYIN file.
+#
+include ~/fsutil.hsl
+
+function installer() : result type none {
+    var option type list;
+    $option = hefesto.sys.get_option("install");
+    if ($option.count() > 0) {
+        hefesto.project.abort(doInstall());
+    }
+    $option = hefesto.sys.get_option("uninstall");
+    if ($option.count() > 0) {
+        hefesto.project.abort(doUninstall());
+    }
+}
+
+local function doInstall() : result type int {
+    var srcFiles type list;
+    var destFiles type list;
+    var destRoot type string;
+    var srcBinary type string;
+
+    if (hefesto.sys.os_name() != "windows") {
+        $destRoot = "/usr/local/share/codeometer";
+        $srcBinary = "codeometer";
+        $destFiles.add_item(hefesto.sys.make_path("/usr/local/bin", $srcBinary));
+    } else {
+        $destRoot = "C:\\codeometer";
+        $srcBinary = "codeometer.exe";
+        $destFiles.add_item(hefesto.sys.make_path(hefesto.sys.make_path($destRoot, "bin"), $srcBinary));
+    }
+
+    $destFiles.add_item(hefesto.sys.make_path($destRoot, "doc/manual.txt"));
+    if (hefesto.sys.os_name() != "windows") {
+        $destFiles.add_item(hefesto.sys.make_path("/usr/local/man/man1", "codeometer.1"));
+    }
+
+    var cwd type string;
+
+    $cwd = hefesto.sys.pwd();
+
+    $srcFiles.add_item(hefesto.sys.make_path($cwd, $srcBinary));
+
+    $srcFiles.add_item(hefesto.sys.make_path($cwd, "../README"));
+    if (hefesto.sys.os_name() != "windows") {
+        $srcFiles.add_item(hefesto.sys.make_path($cwd, "../doc/man/codeometer.1"));
+    }
+
+    var f type int;
+    var err type int;
+
+    $f = 0;
+    $err = 0;
+
+    while ($f < $srcFiles.count() && $err == 0) {
+        var destFilePath type string;
+        var srcFilePath type string;
+        $destFilePath = $destFiles.item($f);
+        $srcFilePath = $srcFiles.item($f);
+        var destPath type string;
+        $destPath = pathfromfilepath($destFilePath);
+        if (isdir($destPath) == 0) {
+            if (mktree($destPath) == 0) {
+                hefesto.sys.echo("ERROR: While trying to create \"" + $destPath + "\" directory.\n");
+                $err = 1;
+                continue;
+            }
+        }
+        if (hefesto.sys.cp($srcFilePath, $destFilePath) == 0) {
+            hefesto.sys.echo("ERROR: While copying \"" + $srcFilePath + "\" to \"" + $destFilePath + "\".\n");
+            $err = 1;
+            continue;
+        }
+        $f = $f + 1;
+    }
+
+    if (hefesto.sys.os_name() == "windows") {
+        export_binary_path(hefesto.sys.make_path("C:\\codeometer\\bin", $srcBinary));
+    }
+
+    if ($err == 0) {
+        hefesto.sys.echo("INFO: Installed.\n");
+    } else {
+        doUninstall();
+        hefesto.sys.echo("ERROR: Aborted.\n");
+    }
+
+    result $err;
+}
+
+local function doUninstall() : result type int {
+    var destFiles type list;
+    var destRoot type string;
+
+    if (hefesto.sys.os_name() != "windows") {
+        $destRoot = "/usr/local/share/codeometer";
+        $destFiles.add_item(hefesto.sys.make_path("/usr/local/bin", "codeometer"));
+    } else {
+        $destRoot = "C:\\codeometer";
+        $destFiles.add_item(hefesto.sys.make_path(hefesto.sys.make_path($destRoot, "bin"), "codeometer.exe"));
+    }
+
+    $destFiles.add_item(hefesto.sys.make_path($destRoot, "doc/MANUAL.txt"));
+    $destFiles.add_item(hefesto.sys.make_path($destRoot, "doc"));
+    if (hefesto.sys.os_name() != "windows") {
+        $destFiles.add_item(hefesto.sys.make_path("/usr/local/man/man1", "codeometer.1"));
+    }
+
+    var f type int;
+    var err type int;
+
+    $f = 0;
+    $err = 0;
+
+    while ($f < $destFiles.count()) {
+        var destPath type string;
+        var errFile type int;
+        $destPath = $destFiles.item($f);
+        $errFile = 0;
+        if (isdir($destPath)) {
+            if (rmtree($destPath) == 1) {
+                $errFile = 1;
+            }
+        } else {
+            if (hefesto.sys.rm($destPath) != 0) {
+                $errFile = 1;
+            }
+        }
+        if ($errFile == 1) {
+            hefesto.sys.echo("ERROR: Unable to remove \"" + $destPath + "\" try to do it yourself...\n");
+            $err = $err + 1;
+        }
+        $f = $f + 1;
+    }
+
+    if (hefesto.sys.os_name() == "windows") {
+        unexport_binary_path(hefesto.sys.make_path("C:\\codeometer\\bin", "codeometer.exe"));
+    }
+
+    if ($err == 0) {
+        hefesto.sys.echo("INFO: Uninstalled.\n");
+    } else {
+        hefesto.sys.echo("ERROR: Some files seem to remain. Handle it on your own.\n");
+    }
+
+    result $err;
+}
+
+local function export_binary_path(basepath type string) : result type none {
+    UNExport_binary_path($basepath, 1);
+}
+
+local function unexport_binary_path(basepath type string) : result type none {
+    UNExport_binary_path($basepath, 0);
+}
+
+local function UNExport_binary_path(basepath type string, export type int) : result type none {
+    var env_path type list;
+    $env_path = get_windows_path_data();
+
+    $basepath.replace("codeometer\\.exe", "");
+
+    var action_cond type int;
+    if ($export == 1) {
+        $action_cond = ($env_path.index_of($basepath) == -1);
+    } else {
+        $action_cond = ($env_path.index_of($basepath) > -1);
+    }
+    if ($action_cond) {
+        if ($export == 1) {
+            $env_path.add_item($basepath);
+        } else {
+            while ($env_path.index_of($basepath) > -1) {
+                $env_path.del_item($basepath);
+            }
+        }
+        set_windows_path_data($env_path);
+        if ($export == 1) {
+            hefesto.sys.echo("INFO: the binary was exported. Try to log-off and log-on again in order to reload your PATH environment variable.\n");
+        } else {
+            hefesto.sys.echo("INFO: the binary was unexported.\n");
+        }
+    } else {
+        if ($export == 1) {
+            hefesto.sys.echo("WARNING: the binary was previously exported.\n");
+        } else {
+            hefesto.sys.echo("INFO: the binary was not exported.\n");
+        }
+    }
+}
+
+local function set_windows_path_data(data type list) : result type none {
+    var env_path_buf type string;
+    var d type int;
+
+    $d = 0;
+    while ($d < $data.count()) {
+        $env_path_buf = $env_path_buf + $data.item($d) + ";";
+        $d = $d + 1;
+    }
+
+    if ($env_path_buf.len() > 0) {
+        hefesto.sys.setenv("WINREG:HKLM\\SYSTEM\\CurrentControlSet\\Control\\Session Manager\\Environment\\PATH", $env_path_buf);
+    }
+}
+
+local function get_windows_path_data() : result type list {
+    var env_path_data type list;
+    var buf type string;
+
+    $buf = hefesto.sys.env("WINREG:HKLM\\SYSTEM\\CurrentControlSet\\Control\\Session Manager\\Environment\\PATH");
+
+    var b type int;
+    var item type string;
+
+    $b = 0;
+    while ($b < $buf.len()) {
+        if ($buf.at($b) == ";") {
+            $env_path_data.add_item($item);
+            $item = "";
+        } else {
+            $item = $item + $buf.at($b);
+        }
+        $b = $b + 1;
+    }
+
+    if ($item.len() > 0) {
+        $env_path_data.add_item($item);
+    }
+
+    result $env_path_data;
+}
