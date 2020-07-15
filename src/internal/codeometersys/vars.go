@@ -281,7 +281,7 @@ const webInterface = `
                     <table border = 0>
                         <tr>
                             <td>
-                                <input type="text" id="edtExt" size=76% placeholder="Type all relevant file extensions present in the project (eg.: c, h, etc)." value="{{.edtExt}}">
+                                <input type="text" id="edtExt" size=76% placeholder="Type all relevant file extensions (eg.: c, h, etc). Let it empty means cheating &#172;&#172;..." value="{{.edtExt}}">
                             </td>
                             <td>
                                 <input type="checkbox" id="chkEstimatives" {{.chkEstimatives}}> Estimatives
