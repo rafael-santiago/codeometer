@@ -20,6 +20,8 @@ import (
     "os/exec"
     "strconv"
     "time"
+    "net/url"
+    "net/http"
 )
 
 var gWorkingLoadersPerRecursionNr int = 20
@@ -27,6 +29,8 @@ var gWorkingLoadersPerRecursionNr int = 20
 var gAsyncLoadDir bool
 
 var gSubtaskTimeout string = "10m"
+
+var gHasGit bool
 
 // Initializes internal stuff.
 func init() {
@@ -47,6 +51,10 @@ func init() {
     if err != nil {
         fmt.Fprintf(os.Stderr, "error: --subtask-timeout has invalid value : %s.\n", err)
         os.Exit(1)
+    }
+    cmd := exec.Command("git", "--version")
+    if cmd.Run() == nil {
+        gHasGit = true
     }
 }
 
@@ -222,6 +230,9 @@ func loadZippedCode(codestat *ruler.CodeStat, srcpath string, exts...string) err
 // directory searching for relevant code files. The temporary directory is always
 // removed.
 func loadGitRepoCode(codestat *ruler.CodeStat, srcpath string, exts...string) error {
+    if !gHasGit {
+        return giveHTTPGetZIPaTry(codestat, srcpath, exts...)
+    }
     tempdir, errTemp := ioutil.TempDir("", "codeometer-temp")
     if errTemp != nil {
         return errTemp
@@ -243,4 +254,42 @@ func loadGitRepoCode(codestat *ruler.CodeStat, srcpath string, exts...string) er
             return fmt.Errorf("Git clone aborted due to processing timeout.")
     }
     return LoadCode(codestat, tempdir, exts...)
+}
+
+// If Git clone has failed try to download the zip file of this repository.
+func giveHTTPGetZIPaTry(codestat *ruler.CodeStat, repoURL string, exts...string) error {
+    var URL string
+    ru, errURLParse := url.Parse(repoURL)
+    if errURLParse != nil {
+        return errURLParse
+    }
+    hostname := ru.Host
+    if strings.Contains(hostname, "github.com") {
+        URL = repoURL + "/archive/master.zip"
+    } else if strings.Contains(hostname, "gitlab.com") {
+        URL = repoURL + "/-/archive/master/" + filepath.Base(repoURL) + "-master.zip"
+    } else {
+        URL = repoURL
+    }
+    tempdir, errTemp := ioutil.TempDir("", "codeometer-temp")
+    if errTemp != nil {
+        return errTemp
+    }
+    defer os.RemoveAll(tempdir)
+    content, errGet := http.Get(URL)
+    if errGet != nil {
+        return errGet
+    }
+    zipPath := filepath.Join(tempdir, filepath.Base(repoURL) + ".zip")
+    file, errFile := os.Create(zipPath)
+    if errFile != nil {
+        return errFile
+    }
+    defer file.Close()
+
+    _, errCopy := io.Copy(file, content.Body)
+    if errCopy != nil {
+        return errCopy
+    }
+    return loadZippedCode(codestat, zipPath, exts...)
 }
