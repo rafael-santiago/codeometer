@@ -331,14 +331,23 @@ data:image/gif;base64,R0lGODdhVAOmAeesAAAAADMAAGYAAJkAAMwAAP8AAAAzADMzAGYzAJkzAM
 const webErrorPage = `
 <html>
     <title>Codeometer - HTTP Error</title>
-    <table border=0>
-        <tr>
-	<td><img src={{.statusImage}} width=180 height=160></td>
-	<td><h1>Codeometer Error<br>{{.error}}</h1><br>Well, it seems that you hit a very random place...</td>
-	<tr><td colspan="2">
-            <p align="right"><small><a href={{.home}}>Codeometer's home page</a></small>
+    <script>
+        function setHome() {
+            home = document.getElementById("home");
+            home.href = document.location.protocol + "//" + document.location.hostname + ":" + document.location.port + "/codeometer";
+        }
+    </script>
+    <body onload="setHome()">
+        <table border=0>
+            <tr>
+	    <td><img src={{.statusImage}} width=180 height=160></td>
+            <td><h1>Codeometer Error<br>{{.error}}</h1><br>Well, it seems that you hit a very random place...</td>
+            <tr><td colspan="2">
+                <p align="right"><small><a id="home" href=".">Codeometer's home page</a></small>
             </p></td></tr>
-	</table></html>
+	</table>
+    </body>
+</html>
 `
 
 const waitImage = `

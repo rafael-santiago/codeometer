@@ -125,7 +125,7 @@ sub-task:
 How can I  use codeometer?
 --------------------------
 
-You can use codeometer as a good and old command line tool or you can you it from your web browser.
+You can use codeometer as a good and old command line tool or you can use it from your web browser.
 
 In order to use codeometer from your command line you need to run the measure command. By default this command only expects
 a file or directory path or still a url to a git repo.

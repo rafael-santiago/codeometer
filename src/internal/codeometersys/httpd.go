@@ -196,14 +196,6 @@ func handle(w http.ResponseWriter, r *http.Request) {
             r.ParseForm()
             r.Form.Set("statusImage", webStatusImage)
             r.Form.Set("error", "404 Not Found")
-            var home string
-            if options.GetOption("cert", "") != "" {
-                home = "https://"
-            } else {
-                home = "http://"
-            }
-            home += options.GetOption("peer-addr", "") + "/codeometer"
-            r.Form.Set("home", home)
             fmt.Fprintf(w, "%s", expandTemplateActions(webErrorPage, r.Form))
             break
     }
